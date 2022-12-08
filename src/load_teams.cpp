@@ -4,6 +4,8 @@
 #include <assert.h>
 #include <random>
 
+#include "match.hpp"
+
 using namespace world_cup;
 
 
@@ -22,6 +24,10 @@ int main() {
     for (auto& t : teams48) {
         std::cout << t << "\n";
     } 
+
+    Match match(teams48.at(0), teams48.at(1));
+    auto res = match.simulate();
+    std::cout << res << "\n";
 
 
     return 0;

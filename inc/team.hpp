@@ -77,6 +77,7 @@ public:
     auto win_rate() const -> double { return total_.win_rate(); }
     auto total_games() const -> int { return total_.games; }
     auto goals_per_game() const -> double { return total_.avg_goals(); }
+    auto goals_per_minute() const -> double { return total_.avg_goals() / 90.0; } 
     auto name() const -> std::string { return name_; }
 
     // read a comma seperated value file name

@@ -1,4 +1,5 @@
 #include "team.hpp"
+#include "rng.hpp"
 #include <assert.h>
 
 namespace world_cup {
@@ -44,48 +45,12 @@ std::ostream &operator<<(std::ostream& os, const Team& team) {
     return os;
 }
 
+
+
 namespace {
 
     using vec = std::vector<Team>;
 
-    /**========================================================================
-     *!                           RNG functions
-     *========================================================================**/
-    auto getRandomSeed() -> std::seed_seq {
-
-        // This gets a source of actual, honest-to-god randomness
-        std::random_device source;
-
-        // Here, we fill an array of random data from the source
-        unsigned int random_data[10];
-        for(auto& elem : random_data) {
-            elem = source(); 
-        }
-
-        // this creates the random seed sequence out of the random data
-        return std::seed_seq(random_data + 0, random_data + 10); 
-    };
-    // get a random value between a and b
-    auto runif (int a, int b) -> int {
-
-        static auto seed = getRandomSeed();
-        static std::default_random_engine rng(seed);
-
-        std::uniform_int_distribution<int> dist(a, b);
-        return dist(rng);
-    };
-
-    // generate an integer according to a poisson distribution of parameter \lambda
-    // used to simulate the number of goals scored by a team
-    auto poisson (int lambda) -> int {
-
-        static auto seed = getRandomSeed();
-        static std::default_random_engine rng(seed);
-
-        std::poisson_distribution<int> dist(lambda);
-        return dist(rng);
-    };
-    
     // Returns the pair <top32, leftover> where top32.size() = 32 and leftover.size() = 83 - 32
     [[nodiscard]] auto top_32() -> std::pair<vec, vec> {
 
@@ -122,7 +87,7 @@ namespace {
 
         for (int i = 0; i < 16; i++) {
             // get a random number between 0 and the size of teams - 1
-            double draw = runif(0, leftover.size() - 1);
+            double draw = rng::runif(0, leftover.size() - 1);
             std::cout << "draw: " << draw << " < " << leftover.size() << "\n";
             next16.push_back(leftover[draw]);
             leftover.erase(leftover.begin() + draw);
@@ -142,8 +107,7 @@ namespace {
 
         return all48;
     }
-
-} // namespace
+}
 
 
 auto Team::top_48() -> std::vector<Team> { 
@@ -156,16 +120,13 @@ auto Team::top_48() -> std::vector<Team> {
 // name,games,wins,losses,ties,goals,against,
 Team::Team(const std::string &csv_line) {
 
-    // First we split the string apart by it's commas
-
+    // First we split the string apart by its commas
     auto split_elements = split(csv_line, ",");
 
     for (auto& str : split_elements) {
         std::cout << str << " ";
     }
     std::cout << "len: " << split_elements.size() << "\n";
-
-
 
     assert(split_elements.size() == 13);
 

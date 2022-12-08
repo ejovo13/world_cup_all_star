@@ -1,1 +1,1 @@
-add_library(world_cup team.cpp)
+add_library(world_cup team.cpp rng.cpp)
