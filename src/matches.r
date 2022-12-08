@@ -206,7 +206,9 @@ colnames(df_home) <- new_names_home
 colnames(df_away) <- new_names_away
 
 df_away_no_name <- df_away |> select(c(2:ncol(df_away)))
-df_full <- bind_cols(df_home, df_away |> select(c(2:ncol(df_away))))
+df_away_drop <- df_away_no_name |> select(c(1:(ncol(df_away_no_name) - 2)))
+df_home_drop <- df_home |> select(c(1:(ncol(df_home) - 2)))
+df_full <- bind_cols(df_home_drop, df_away_drop)
 
 write_csv(df_full, "world_cup_stats.csv")
 
