@@ -1,4 +1,5 @@
 #include "team.hpp"
+#include <assert.h>
 
 namespace world_cup {
 
@@ -24,8 +25,132 @@ namespace {
 
 } // namespace 
 
+Record operator+(const Record &lhs, const Record &rhs) {
+
+    Record out {lhs.games + rhs.games,
+                lhs.wins + rhs.wins,
+                lhs.losses + rhs.losses,
+                lhs.ties + rhs.ties,
+                lhs.goals + rhs.goals,
+                lhs.goals_against + rhs.goals_against};
+
+    return out;
+}
+
+std::ostream &operator<<(std::ostream& os, const Team& team) {
+
+    os << "[Team] " << team.name_ << " ";
+    os << "games: " << team.total_.games << ", wins: " << team.total_.wins << ", win_rate: " << team.win_rate();
+    return os;
+}
+
+namespace {
+
+    using vec = std::vector<Team>;
+
+    /**========================================================================
+     *!                           RNG functions
+     *========================================================================**/
+    auto getRandomSeed() -> std::seed_seq {
+
+        // This gets a source of actual, honest-to-god randomness
+        std::random_device source;
+
+        // Here, we fill an array of random data from the source
+        unsigned int random_data[10];
+        for(auto& elem : random_data) {
+            elem = source(); 
+        }
+
+        // this creates the random seed sequence out of the random data
+        return std::seed_seq(random_data + 0, random_data + 10); 
+    };
+    // get a random value between a and b
+    auto runif (int a, int b) -> int {
+
+        static auto seed = getRandomSeed();
+        static std::default_random_engine rng(seed);
+
+        std::uniform_int_distribution<int> dist(a, b);
+        return dist(rng);
+    };
+
+    // generate an integer according to a poisson distribution of parameter \lambda
+    // used to simulate the number of goals scored by a team
+    auto poisson (int lambda) -> int {
+
+        static auto seed = getRandomSeed();
+        static std::default_random_engine rng(seed);
+
+        std::poisson_distribution<int> dist(lambda);
+        return dist(rng);
+    };
+    
+    // Returns the pair <top32, leftover> where top32.size() = 32 and leftover.size() = 83 - 32
+    [[nodiscard]] auto top_32() -> std::pair<vec, vec> {
+
+        // Start out by retrieving the teams and then selecting the 
+        // top 32 win rates of teams that have played at least 10 games
+        auto teams = Team::get_teams();
+        std::sort(teams.begin(), teams.end(), [&] (const Team& lhs, const Team& rhs) { return lhs.win_rate() > rhs.win_rate(); });
+
+        std::vector<Team> top32(0);
+        std::vector<Team> leftover(0);
+        int i = 0;
+
+        const int MIN_GAMES = 10;
+        auto lam = [&] (auto &t) -> bool {
+            if (i < 32 && t.total_games() > MIN_GAMES) {
+                i++;
+                return true;
+            } else {
+                return false;
+            }
+        };
+
+        std::copy_if(teams.begin(), teams.end(), std::back_inserter(top32), lam); i = 0; // take top 32 and reset i
+        std::copy_if(teams.begin(), teams.end(), std::back_inserter(leftover), [&] (auto x) { return !lam(x); });
+
+        return std::make_pair<vec, vec> (std::move(top32), std::move(leftover));
+    }
+
+    [[nodiscard]] auto get_48(std::pair<vec, vec>& pair) -> vec {
+
+        std::vector<Team> next16 (0);
+
+        std::vector<Team>& leftover = pair.second;
+
+        for (int i = 0; i < 16; i++) {
+            // get a random number between 0 and the size of teams - 1
+            double draw = runif(0, leftover.size() - 1);
+            std::cout << "draw: " << draw << " < " << leftover.size() << "\n";
+            next16.push_back(leftover[draw]);
+            leftover.erase(leftover.begin() + draw);
+        }
+            
+        std::vector<Team> all48 (0);
+
+        for (auto& t : pair.first) {
+            all48.push_back(t);
+        }
+
+        for (auto& t : next16) {
+            all48.push_back(t);
+        }
+
+        assert(all48.size() == 48);
+
+        return all48;
+    }
+
+} // namespace
 
 
+auto Team::top_48() -> std::vector<Team> { 
+    
+    auto pair = top_32(); 
+    return get_48(pair);
+}
 
 // We are assuming a standard format of:
 // name,games,wins,losses,ties,goals,against,
@@ -35,6 +160,64 @@ Team::Team(const std::string &csv_line) {
 
     auto split_elements = split(csv_line, ",");
 
+    for (auto& str : split_elements) {
+        std::cout << str << " ";
+    }
+    std::cout << "len: " << split_elements.size() << "\n";
+
+
+
+    assert(split_elements.size() == 13);
+
+    name_ = split_elements[0];
+
+    Record home_record(
+        stoi(split_elements[1]),
+        stoi(split_elements[2]),
+        stoi(split_elements[3]),
+        stoi(split_elements[4]),
+        stoi(split_elements[5]),
+        stoi(split_elements[6])
+    );
+
+    Record away_record(
+        stoi(split_elements[7]),
+        stoi(split_elements[8]),
+        stoi(split_elements[9]),
+        stoi(split_elements[10]),
+        stoi(split_elements[11]),
+        stoi(split_elements[12])
+    );
+
+    home_ = home_record;
+    away_ = away_record;
+    total_ = home_record + away_record;
 }
+
+std::vector<Team> Team::load_teams(const std::string &csv_file) {
+
+    std::ifstream file;
+    file.open(csv_file);
+    std::string line;
+    std::vector<Team> out(0);
+
+    std::getline(file, line); // skip the first line
+    int count = 1;
+    // file.getline()
+
+    while (std::getline(file, line))
+    {
+        out.push_back(Team(line));
+        count++;
+    }
+
+    file.close();
+
+    std::cout << "Read " << count << " lines\n";
+
+    return out;
+}
+
+
 
 };
