@@ -1,3 +1,4 @@
+#pragma once
 /**========================================================================
  * ?                          world_cup.hpp
  * @brief   : Implementation of world cup classes
@@ -7,4 +8,7 @@
  * @date    : 2022-12-08
  *========================================================================**/
 
-
+#include "rng.hpp"
+#include "team.hpp"
+#include "match.hpp"
+#include "bracket.hpp"

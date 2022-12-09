@@ -49,4 +49,23 @@ namespace world_cup::rng { // world_cup::rng
         return dist(rng);
     }
 
+    auto permutation(int n) -> std::vector<int> {
+
+        // generate a vector from 0 to n-1
+        std::vector<int> lin (n, 0);
+        for (int i = 0; i < n; i++) {
+            lin[i] = i;
+        }
+
+        // now shuffle the elements
+        for (int i = n - 1; i > 0; i--) {
+            int j = runif(0, i);
+            int tmp = lin[i];
+            lin[i] = lin[j];
+            lin[j] = tmp;
+        }
+
+        return lin;
+    }
+
 } // namespace world_cup::rng

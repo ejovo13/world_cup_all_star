@@ -6,6 +6,7 @@ set(wc_src ${CMAKE_SOURCE_DIR}/src)
 set(wc_lib ${CMAKE_SOURCE_DIR}/lib)
 set(wc_inc ${CMAKE_SOURCE_DIR}/inc)
 
+add_compile_options($<$<CONFIG:Debug>:-g>)
 
 include_directories(${wc_inc})
 add_subdirectory(${wc_lib})

@@ -1,3 +1,5 @@
+#pragma once
+
 #include <random>
 
 namespace world_cup::rng { // world_cup::rng
@@ -14,5 +16,8 @@ namespace world_cup::rng { // world_cup::rng
     auto rpois (int lambda) -> int;
 
     auto rexp (double lambda) -> double;
+
+    // return a permutation from 0 to n-1
+    auto permutation (int n) -> std::vector<int>;
 
 } // namespace world_cup::rng
