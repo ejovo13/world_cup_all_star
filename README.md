@@ -11,3 +11,11 @@ mkdir build && cd build
 cmake ../                # Configuration
 cmake --build ./ -j4     # Compilation
 ```
+
+### Executing
+
+As of this commit, the executable `load_teams` will be created in `${CMAKE_BINARY_DIR}/src`. 
+```
+cd src        # assuming we are in world_cup_all_star/build
+./load_teams
+```
