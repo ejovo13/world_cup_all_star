@@ -40,7 +40,8 @@ struct PoolResults {
     int D_wins = 0;
     int D_loss = 0;
     int D_ties = 0;
-
+    
+    // Get metrics about the pool results
     auto a_score() const -> int { return A_wins * 3 + A_ties * 1; }
     auto b_score() const -> int { return B_wins * 3 + B_ties * 1; }
     auto c_score() const -> int { return C_wins * 3 + C_ties * 1; }

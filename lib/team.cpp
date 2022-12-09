@@ -1,6 +1,7 @@
 #include "team.hpp"
 #include "rng.hpp"
 #include <assert.h>
+#include <sys/stat.h>
 
 namespace world_cup {
 
@@ -155,12 +156,24 @@ Team::Team(const std::string &csv_line) {
     total_ = home_record + away_record;
 }
 
+// test if the file exists
+inline bool file_exists (const std::string& name) {
+    struct stat buffer;   
+    return (stat (name.c_str(), &buffer) == 0); 
+}
+
 std::vector<Team> Team::load_teams(const std::string &csv_file) {
 
     std::ifstream file;
     file.open(csv_file);
     std::string line;
     std::vector<Team> out(0);
+
+    if (!file_exists(csv_file)) {
+        // exit
+        std::cerr << "ERROR: " << csv_file << " does not exist\n";
+        exit(2);
+    }
 
     std::getline(file, line); // skip the first line
     int count = 1;

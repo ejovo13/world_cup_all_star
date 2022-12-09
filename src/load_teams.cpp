@@ -56,7 +56,9 @@ int main() {
         std::cout << p.run_round_robin() << "\n";
     }
 
-    // We break this apart into chunks of 4 and call them pools
+    // Extraction of the winners
+    // of each pool
+
 
     return 0;
 }
