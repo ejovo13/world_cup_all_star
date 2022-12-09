@@ -75,18 +75,38 @@ auto Pool::run_round_robin() const -> PoolResults {
 
 auto Pool::gen_pools(const std::vector<Team> &t48, const std::vector<int> &permutation) -> std::vector<Pool> {
 
-        std::vector<Pool> out (0);
+    std::vector<Pool> out (0);
 
-        for (int __i = 0; __i < 48; __i += 4) { // __i is the iterator of the range 1 .. 48, (i0, i1, i2, i3) are the random indices
-            int i0 = permutation.at(__i);
-            int i1 = permutation.at(__i + 1);
-            int i2 = permutation.at(__i + 2);
-            int i3 = permutation.at(__i + 3);
-            Pool p (t48.at(i0), t48.at(i1), t48.at(i2), t48.at(i3));
-            out.push_back(p);
-        }
+    for (int __i = 0; __i < 48; __i += 4) { // __i is the iterator of the range 1 .. 48, (i0, i1, i2, i3) are the random indices
+        int i0 = permutation.at(__i);
+        int i1 = permutation.at(__i + 1);
+        int i2 = permutation.at(__i + 2);
+        int i3 = permutation.at(__i + 3);
+        Pool p (t48.at(i0), t48.at(i1), t48.at(i2), t48.at(i3));
+        out.push_back(p);
+    }
 
-        return out;
-    };
+    return out;
+};
+
+auto conv_PoolResults_to_ranking(const PoolResults& res) -> std::vector<Team> {
+
+    // we need to give each team a score (let's do it using chess)
+    // a win is 3 points and a tie is 1 point
+
+    // Compute the scores and store it in a four element vector
+    std::vector<int> scores(4, 0);
+    scores[0] = res.a_score();
+    scores[1] = res.b_score();
+    scores[2] = res.c_score();
+    scores[3] = res.d_score();
+
+    for (auto i : scores) {
+        std::cout << i << " ";
+    }
+    std::cout << "\n";
+
+}
+
 
 }; // namespace world_cup
