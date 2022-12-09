@@ -73,4 +73,20 @@ auto Pool::run_round_robin() const -> PoolResults {
 
 }
 
+auto Pool::gen_pools(const std::vector<Team> &t48, const std::vector<int> &permutation) -> std::vector<Pool> {
+
+        std::vector<Pool> out (0);
+
+        for (int __i = 0; __i < 48; __i += 4) { // __i is the iterator of the range 1 .. 48, (i0, i1, i2, i3) are the random indices
+            int i0 = permutation.at(__i);
+            int i1 = permutation.at(__i + 1);
+            int i2 = permutation.at(__i + 2);
+            int i3 = permutation.at(__i + 3);
+            Pool p (t48.at(i0), t48.at(i1), t48.at(i2), t48.at(i3));
+            out.push_back(p);
+        }
+
+        return out;
+    };
+
 }; // namespace world_cup

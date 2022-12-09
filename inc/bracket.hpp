@@ -58,6 +58,8 @@ public:
         return os;
     };
 
+    static auto gen_pools(const std::vector<Team> &t48, const std::vector<int> &permutation) -> std::vector<Pool>;
+
 private:
 
     Team A_;
