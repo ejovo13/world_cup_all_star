@@ -6,6 +6,7 @@
 
 #include "match.hpp"
 #include "rng.hpp"
+#include "bracket.hpp"
 // #include ""
 
 using namespace world_cup;
@@ -45,16 +46,31 @@ int main() {
 
     auto pools = Pool::gen_pools(teams48, perm);
     for (auto &p : pools) {
-        std::cout << p << "\n";
+        // std::cout << p << "\n";
     }
 
     /**========================================================================
      *!                           Simulation of pools
      *========================================================================**/
-    std::cout << "Simulating Pools\n";
+    // std::cout << "Simulating Pools\n";
+    std::vector<PoolResults> pool_results;
+
+    std::cout << std::endl;
     for (auto &p : pools) {
-        std::cout << p.run_round_robin() << "\n";
+        auto pool_res = p.run_round_robin();
+        std::cout << pool_res << "\n\n";
+        pool_results.push_back(pool_res);
+        // break;
     }
+
+    for (auto &res : pool_results) {
+        conv_PoolResults_to_ranking(res);
+    }
+
+    for (auto &t : teams48) {
+        t.print_rates();
+    }
+
 
     // Extraction of the winners
     // of each pool

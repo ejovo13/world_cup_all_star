@@ -14,17 +14,24 @@
 #include "team.hpp"
 #include "match.hpp"
 
+#include <array>
+#include <memory>
+#include <functional>
+
 namespace world_cup {
+
+
 
 struct PoolResults {
 
-    Result ab;
-    Result ac;
-    Result ad;
-    Result bc;
-    Result bd;
-    Result cd;
+    MatchResult ab;
+    MatchResult ac;
+    MatchResult ad;
+    MatchResult bc;
+    MatchResult bd;
+    MatchResult cd;
 
+    // This repetition was horrible to deal with
     int A_wins = 0;
     int A_loss = 0;
     int A_ties = 0;
@@ -63,6 +70,133 @@ struct PoolResults {
     auto d() const -> Team { return cd.away; }
 
 };
+
+// A vector (array?) of pool results whose length is 12 (because there are 12 teams of 4)
+// shall be used to contstruct a new bracket object
+
+// Imagine the bracket as an array of TEAMS
+// Start with our array of 16 teams. Create 8 new matches, run them, and then combine the winners
+// to create a new array with 8 teams. Rinse and repeat
+
+// N is the number of teams
+// using BracketRound<N> = std::array<Team, N>;
+
+/**========================================================================
+ *!                  Functional approach to bracket handling
+ *========================================================================**/
+// map vector<X> to vector<Y> using a function f: X -> Y
+template<class X, class Y>
+auto map_vec(std::vector<X> vec, std::function<Y(X)> fn) -> std::vector<Y> {
+    std::vector<Y> y(vec.size());
+
+    int i = 0;
+    for (auto &x : vec) {
+        y[i] = fn(x);
+        i++;
+    }
+
+    return y;
+}
+
+// Shuffle the contents of a vector via fischer yates
+// and return a new vector
+template <class X>
+auto shuffle_vec(const std::vector<X> &vec) {
+    std::vector<X> shuffled;
+
+    int n = vec.size();
+    auto perm = rng::permutation(n);
+    // get a permutation 
+    for (auto &i : perm) {
+        shuffled.push_back(vec[i]);
+    }
+
+    return shuffled;
+}
+
+//todo test functional operations!!!
+// operates on vectors!!
+// takes the first n elements of a vector, returning a new copy
+template<class X>
+auto take(std::vector<X> vec, int n) {
+    int i = 0;
+    std::vector<X> out;
+
+    for (const auto &v : vec) {
+        if (i >= n) break;
+        out.push_back(v);
+        i++;
+    }
+
+    return out;
+}
+
+// take a matrix and pinch it with some operation BIN_OP
+// template<class X, int _Nm, class _BinOp>
+// auto pinch_array(std::array<X, _Nm> array, _BinOp binop) -> std::array<X, _Nm / 2> {
+
+//     // Cut the array in half
+
+
+// }
+
+
+template <int _Nm>
+class BracketRound {
+
+public:
+
+    BracketRound(std::array<Team, _Nm> teams) : teams_{teams} {}
+    BracketRound(std::vector<Team> teams) {
+
+        // Iterate through the first _Nm elements of teams
+        // it would be faster to memcpy the contiguous memory but we aren't too worried about it
+        for (int i = 0; i < _Nm; i++) {
+            teams_[i] = teams[i];
+        }
+
+    }
+
+    auto nb_teams() -> int { return teams_.size(); }
+
+    auto play_round() -> BracketRound<_Nm / 2> {
+        // Start by creating _Nm / 2 matches
+        std::vector<Match> matches;
+
+        for (int i = 0; i < _Nm; i += 2) {
+            matches.push_back(Match(teams_[i], teams_[i + 1]));
+        }
+
+        std::function<Team(Match)> extract_winner = [&] (Match m) { 
+            MatchResult res = m.simulate_no_ties();
+            std::cout << "Winner: " << res.winner() << "\n";
+            return res.winner();
+        };
+
+        // Play all matches and extract the winners
+        std::vector<Team> winners = map_vec(matches, extract_winner);
+    
+        // We should verify that the length of the winner is _Nm / 2
+        if (winners.size() != _Nm / 2) throw std::invalid_argument("Length of the next round is not half of this round");
+
+        //TODO verify that the no ties yields no ties...
+        // Now that we have the new winners, let's go ahead and construct the next bracket!
+
+        BracketRound<_Nm / 2> next_round (winners);
+
+        return next_round;
+    }
+
+private:
+
+    std::array<Team, _Nm> teams_;
+
+
+};
+
+// Should this function belong to someone?
+// auto play_round
+
 
 // We need to convert a PoolResults object into a ranking.
 auto conv_PoolResults_to_ranking(const PoolResults& res) -> std::vector<Team>;

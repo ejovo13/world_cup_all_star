@@ -2,7 +2,7 @@
 
 namespace world_cup {
 
-std::ostream& operator<<(std::ostream &os, const Result &res) {
+std::ostream& operator<<(std::ostream &os, const MatchResult &res) {
     os << res.home.name() << "(H) " << res.away.name() << "(A) : " << res.home_score << " " << res.away_score;
     return os;
 }

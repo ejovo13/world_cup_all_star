@@ -75,6 +75,14 @@ public:
     Team(const std::string &csv_line);
 
     auto win_rate() const -> double { return total_.win_rate(); }
+    auto home_win_rate() const -> double { return home_.win_rate(); }
+    auto away_win_rate() const -> double { return away_.win_rate(); }
+
+    void print_rates() const {
+        std::cout << name_ << " home wr: " << home_win_rate() << ", away wr: " << away_win_rate() << "\n";
+    }
+
+
     auto total_games() const -> int { return total_.games; }
     auto goals_per_game() const -> double { return total_.avg_goals(); }
     auto goals_per_minute() const -> double { return total_.avg_goals() / 90.0; } 

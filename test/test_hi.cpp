@@ -6,11 +6,13 @@ using namespace world_cup;
 
 void test_load();
 void test_germany_brazil();
+void test_bracket();
 
 int main() {
 
     test_load();
     test_germany_brazil();
+    test_bracket();
 
     return 0;
 }
@@ -50,7 +52,7 @@ void test_germany_brazil() {
 
     Match match{germany, brazil};
 
-    int nb_games = 100000;
+    int nb_games = 50000;
     int count_seven_one = 0;
 
     for (int i = 0; i < nb_games; i++) {
@@ -63,7 +65,34 @@ void test_germany_brazil() {
     std::cout << "Germany vs Brazil\n";
     std::cout << "Simulated " << nb_games << " games, num ocurrences of 7-1: " << count_seven_one << "\n";
     std::cout << "proportion: " << double(count_seven_one) / nb_games << "\n";
-    std::cout << "inv propoertion: " << nb_games / (double) count_seven_one << "\n";
+    std::cout << "inv proportion: " << nb_games / (double) count_seven_one << "\n";
+     
+    // The experimental proportional value is ~0.0013
 
+}
+
+void test_bracket() {
+
+    auto teams = Team::top_48();
+    auto shuffled_teams = shuffle_vec(teams);
+
+    auto t16 = take(shuffle_vec(teams), 16);
+
+    // Let's create a bracket with these teams!!!
+    BracketRound<16> r1 {t16};
+
+    auto r2 = r1.play_round();
+    std::cout << "length r2: " << r2.nb_teams() << "\n";
+
+    auto r3 = r2.play_round();
+    std::cout << "length r3: " << r3.nb_teams() << "\n";
+
+    auto r4 = r3.play_round();
+    std::cout << "length r4: " << r4.nb_teams() << "\n";
+
+    auto r5 = r4.play_round();
+    std::cout << "length r5: " << r5.nb_teams() << "\n";
+
+    // auto r4 = r3.play_round();
 
 }

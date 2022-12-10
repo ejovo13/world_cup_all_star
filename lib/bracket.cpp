@@ -6,7 +6,7 @@ auto operator<<(std::ostream &os, const PoolResults& res) -> std::ostream& {
     os << "A: " << res.A_wins << "-" << res.A_loss << "-" << res.A_ties << "\n";
     os << "B: " << res.B_wins << "-" << res.B_loss << "-" << res.B_ties << "\n";
     os << "C: " << res.C_wins << "-" << res.C_loss << "-" << res.C_ties << "\n";
-    os << "D: " << res.D_wins << "-" << res.D_loss << "-" << res.D_ties << "\n";
+    os << "D: " << res.D_wins << "-" << res.D_loss << "-" << res.D_ties;
     return os;
 };
 
@@ -90,6 +90,7 @@ auto Pool::gen_pools(const std::vector<Team> &t48, const std::vector<int> &permu
 };
 
 auto conv_PoolResults_to_ranking(const PoolResults& res) -> std::vector<Team> {
+// auto conv_PoolResults_to_ranking(const PoolResults& res) {
 
     // we need to give each team a score (let's do it using chess)
     // a win is 3 points and a tie is 1 point
@@ -106,7 +107,13 @@ auto conv_PoolResults_to_ranking(const PoolResults& res) -> std::vector<Team> {
     }
     std::cout << "\n";
 
+    std::vector<Team> out;
+    return out;
+
 }
+
+
+
 
 
 }; // namespace world_cup
