@@ -44,9 +44,10 @@ int main() {
         std::cout << i << " ";
     }
 
+    std::cout << "\n";
     auto pools = Pool::gen_pools(teams48, perm);
     for (auto &p : pools) {
-        // std::cout << p << "\n";
+        std::cout << p << "\n";
     }
 
     /**========================================================================
@@ -67,9 +68,9 @@ int main() {
         conv_PoolResults_to_ranking(res);
     }
 
-    for (auto &t : teams48) {
-        t.print_rates();
-    }
+    // for (auto &t : teams48) {
+    //     t.print_rates();
+    // }
 
 
     // Extraction of the winners

@@ -7,12 +7,16 @@ using namespace world_cup;
 void test_load();
 void test_germany_brazil();
 void test_bracket();
+void test_goal_rate();
+void test_home_away();
 
 int main() {
 
     test_load();
     test_germany_brazil();
     test_bracket();
+    test_goal_rate();
+    test_home_away();
 
     return 0;
 }
@@ -68,13 +72,17 @@ void test_germany_brazil() {
     std::cout << "inv proportion: " << nb_games / (double) count_seven_one << "\n";
      
     // The experimental proportional value is ~0.0013
+    std::cout << "[test_germany_brazil] passed\n";
 
 }
+
+using namespace world_cup::rng; // shuffle_vec
+using namespace world_cup::func; // take
 
 void test_bracket() {
 
     auto teams = Team::top_48();
-    auto shuffled_teams = shuffle_vec(teams);
+    auto shuffled_teams = rng::shuffle_vec(teams);
 
     auto t16 = take(shuffle_vec(teams), 16);
 
@@ -94,5 +102,67 @@ void test_bracket() {
     std::cout << "length r5: " << r5.nb_teams() << "\n";
 
     // auto r4 = r3.play_round();
+
+    std::cout << "[test_bracket] passed\n";
+
+}
+
+
+// let's see if the experimentally average goals is close to the theoretical.
+void test_goal_rate() {
+
+    auto teams = Team::get_teams();
+    auto usa = teams[1];
+
+    std::cout << usa << "\n";
+
+    int n_games = 100000;
+    int total_goals = 0;
+
+    for (int i = 0; i < n_games; i++) {
+        total_goals += sim_goals(usa.goals_per_minute());
+    }
+
+    std::cout << "Total goals: " << total_goals << "\n";
+    std::cout << "avg goals (exp): " << (double) total_goals / n_games << "\n";
+    std::cout << "avg goals (theo): " << usa.goals_per_game() << "\n";
+
+}
+
+void test_home_away() {
+
+    // test if the number of wins is different when home or away
+
+    auto teams = Team::get_teams();
+    auto usa = teams[1];
+    auto france = teams[0];
+
+    std::cout << usa << "\n";
+    std::cout << france << "\n";
+
+    Match uf(usa, france);
+    Match fu(usa, france);
+
+    // Let's simulate n games and see how the proportion changes (or doesnt)
+
+    int nb_games = 100000;
+    int us_won_home = 0;
+    int us_won_away = 0;
+
+    for (int i = 0; i < nb_games; i++) {
+
+        MatchResult uf_res = uf.simulate_no_ties();
+        if (uf_res.winner() == usa) {
+            us_won_home ++;
+        }
+
+        MatchResult fu_res = fu.simulate_no_ties();
+        if (fu_res.winner() == usa) {
+            us_won_away ++;
+        }
+    }
+
+    std::cout << "USA home wins: " << us_won_home << "\n";
+    std::cout << "USA away wins: " << us_won_away << "\n";
 
 }

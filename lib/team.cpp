@@ -89,7 +89,7 @@ namespace {
         for (int i = 0; i < 16; i++) {
             // get a random number between 0 and the size of teams - 1
             double draw = rng::runif(0, leftover.size() - 1);
-            std::cout << "draw: " << draw << " < " << leftover.size() << "\n";
+            // std::cout << "draw: " << draw << " < " << leftover.size() << "\n";
             next16.push_back(leftover[draw]);
             leftover.erase(leftover.begin() + draw);
         }
@@ -124,10 +124,10 @@ Team::Team(const std::string &csv_line) {
     // First we split the string apart by its commas
     auto split_elements = split(csv_line, ",");
 
-    for (auto& str : split_elements) {
-        std::cout << str << " ";
-    }
-    std::cout << "len: " << split_elements.size() << "\n";
+    // for (auto& str : split_elements) {
+    //     std::cout << str << " ";
+    // }
+    // std::cout << "len: " << split_elements.size() << "\n";
 
     assert(split_elements.size() == 13);
 
@@ -187,7 +187,7 @@ std::vector<Team> Team::load_teams(const std::string &csv_file) {
 
     file.close();
 
-    std::cout << "Read " << count << " lines\n";
+    // std::cout << "Read " << count << " lines\n";
 
     return out;
 }

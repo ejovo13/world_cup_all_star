@@ -9,14 +9,13 @@
  * @date    : 2022-12-08
  *========================================================================**/
 
-// #include "world_cup.hpp"
+#include <array>
+#include <memory>
+
+#include "func.hpp"
 #include "rng.hpp"
 #include "team.hpp"
 #include "match.hpp"
-
-#include <array>
-#include <memory>
-#include <functional>
 
 namespace world_cup {
 
@@ -74,72 +73,9 @@ struct PoolResults {
 // A vector (array?) of pool results whose length is 12 (because there are 12 teams of 4)
 // shall be used to contstruct a new bracket object
 
-// Imagine the bracket as an array of TEAMS
+// Imagine the a bracket round as an array of TEAMS
 // Start with our array of 16 teams. Create 8 new matches, run them, and then combine the winners
 // to create a new array with 8 teams. Rinse and repeat
-
-// N is the number of teams
-// using BracketRound<N> = std::array<Team, N>;
-
-/**========================================================================
- *!                  Functional approach to bracket handling
- *========================================================================**/
-// map vector<X> to vector<Y> using a function f: X -> Y
-template<class X, class Y>
-auto map_vec(std::vector<X> vec, std::function<Y(X)> fn) -> std::vector<Y> {
-    std::vector<Y> y(vec.size());
-
-    int i = 0;
-    for (auto &x : vec) {
-        y[i] = fn(x);
-        i++;
-    }
-
-    return y;
-}
-
-// Shuffle the contents of a vector via fischer yates
-// and return a new vector
-template <class X>
-auto shuffle_vec(const std::vector<X> &vec) {
-    std::vector<X> shuffled;
-
-    int n = vec.size();
-    auto perm = rng::permutation(n);
-    // get a permutation 
-    for (auto &i : perm) {
-        shuffled.push_back(vec[i]);
-    }
-
-    return shuffled;
-}
-
-//todo test functional operations!!!
-// operates on vectors!!
-// takes the first n elements of a vector, returning a new copy
-template<class X>
-auto take(std::vector<X> vec, int n) {
-    int i = 0;
-    std::vector<X> out;
-
-    for (const auto &v : vec) {
-        if (i >= n) break;
-        out.push_back(v);
-        i++;
-    }
-
-    return out;
-}
-
-// take a matrix and pinch it with some operation BIN_OP
-// template<class X, int _Nm, class _BinOp>
-// auto pinch_array(std::array<X, _Nm> array, _BinOp binop) -> std::array<X, _Nm / 2> {
-
-//     // Cut the array in half
-
-
-// }
-
 
 template <int _Nm>
 class BracketRound {
@@ -174,7 +110,7 @@ public:
         };
 
         // Play all matches and extract the winners
-        std::vector<Team> winners = map_vec(matches, extract_winner);
+        std::vector<Team> winners = func::map_vec(matches, extract_winner);
     
         // We should verify that the length of the winner is _Nm / 2
         if (winners.size() != _Nm / 2) throw std::invalid_argument("Length of the next round is not half of this round");
@@ -191,12 +127,7 @@ private:
 
     std::array<Team, _Nm> teams_;
 
-
 };
-
-// Should this function belong to someone?
-// auto play_round
-
 
 // We need to convert a PoolResults object into a ranking.
 auto conv_PoolResults_to_ranking(const PoolResults& res) -> std::vector<Team>;
@@ -229,7 +160,3 @@ private:
 };
 
 } // namespace world_cup
-
-
-
-// clas

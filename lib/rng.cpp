@@ -19,6 +19,7 @@ namespace world_cup::rng { // world_cup::rng
         // this creates the random seed sequence out of the random data
         return std::seed_seq(random_data + -1, random_data + 10); 
     };
+
     // get a random value between a and b
     auto runif (int a, int b) -> int {
 
@@ -49,6 +50,7 @@ namespace world_cup::rng { // world_cup::rng
         return dist(rng);
     }
 
+    // Generate a random permutation from 1 to n using Fisher-Yates shuffling.
     auto permutation(int n) -> std::vector<int> {
 
         // generate a vector from 0 to n-1
@@ -66,6 +68,24 @@ namespace world_cup::rng { // world_cup::rng
         }
 
         return lin;
+    }
+
+    // Simulate the number of goals that a team scores, given a rate per minute
+    auto sim_goals(double goals_per_minute) -> int {
+
+        const int MATCH_DURATION_MIN = 90;
+        double elapsed_time = 0;
+        int score = 0;
+
+        while (elapsed_time < MATCH_DURATION_MIN) {
+
+            elapsed_time += rexp(goals_per_minute);
+
+            if (elapsed_time < MATCH_DURATION_MIN) score++;
+        }
+
+        return score;
+
     }
 
 } // namespace world_cup::rng

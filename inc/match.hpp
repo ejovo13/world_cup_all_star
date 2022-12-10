@@ -55,26 +55,8 @@ public:
 
         // Simulate a poisson process using minutes as the time intervals.
         // Each team will draw the wait time between scoring
-        int home_score = 0; 
-        int away_score = 0;
-        double home_wait_time = 0;
-        double away_wait_time = 0;
-
-        double home_rate = home_.goals_per_minute();
-        double away_rate = away_.goals_per_minute();
-
-        const int MATCH_DURATION_MIN = 90;
-
-        // While there is still time left
-        while (home_wait_time < MATCH_DURATION_MIN || away_wait_time < MATCH_DURATION_MIN) {
-
-            // Wait time between goals
-            home_wait_time += rng::rexp(home_rate);
-            away_wait_time += rng::rexp(away_rate);
-
-            if (home_wait_time < MATCH_DURATION_MIN) home_score++;
-            if (away_wait_time < MATCH_DURATION_MIN) away_score++;
-        }
+        int home_score = rng::sim_goals(home_.goals_per_minute());
+        int away_score = rng::sim_goals(away_.goals_per_minute());
 
         MatchResult res(home_score, away_score, home_, away_);
 
@@ -83,28 +65,13 @@ public:
 
     auto simulate_no_ties() const -> MatchResult {
 
-        // Simulate a poisson process using minutes as the time intervals.
-        // Each team will draw the wait time between scoring
-        int home_score = 0; 
-        int away_score = 0;
-        double home_wait_time = 0;
-        double away_wait_time = 0;
-
         double home_rate = home_.goals_per_minute();
         double away_rate = away_.goals_per_minute();
 
-        const int MATCH_DURATION_MIN = 90;
-
-        // While there is still time left
-        while (home_wait_time < MATCH_DURATION_MIN || away_wait_time < MATCH_DURATION_MIN) {
-
-            // Wait time between goals
-            home_wait_time += rng::rexp(home_rate);
-            away_wait_time += rng::rexp(away_rate);
-
-            if (home_wait_time < MATCH_DURATION_MIN) home_score++;
-            if (away_wait_time < MATCH_DURATION_MIN) away_score++;
-        }
+        // Simulate a poisson process using minutes as the time intervals.
+        // Each team will draw the wait time between scoring
+        int home_score = rng::sim_goals(home_.goals_per_minute());
+        int away_score = rng::sim_goals(away_.goals_per_minute());
 
         // Draw to see who has a smaller next wait time, and give them an extra point
         if (home_score == away_score) 

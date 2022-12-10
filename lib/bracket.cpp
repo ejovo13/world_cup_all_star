@@ -24,6 +24,8 @@ auto Pool::run_round_robin() const -> PoolResults {
 
     // 6 total matches
 
+
+    //TODO really ugly code with a lot of duplication, can we clean this up?
     // We have to have an algorithm that determines a winner..
     auto ab_res = ab.simulate();
     auto ac_res = ac.simulate();
@@ -36,29 +38,29 @@ auto Pool::run_round_robin() const -> PoolResults {
     int A_loss = 0, B_loss = 0, C_loss = 0, D_loss = 0;
     int A_ties = 0, B_ties = 0, C_ties = 0, D_ties = 0;
 
-    if (ab_res.outcome() == v_home) { A_wins++; B_loss++; }
-    else if (ab_res.outcome() == v_away) {A_wins++; B_loss++; }
-    else { A_ties++; B_ties++; }
+    if (ab_res.outcome() == v_home)      { A_wins++; B_loss++; }
+    else if (ab_res.outcome() == v_away) { A_loss++; B_wins++; }
+    else                                 { A_ties++; B_ties++; }
 
-    if (ac_res.outcome() == v_home) { A_wins++; C_loss++; }
-    else if (ac_res.outcome() == v_away) {A_wins++; C_loss++; }
-    else { A_ties++; C_ties++; }
+    if (ac_res.outcome() == v_home)      { A_wins++; C_loss++; }
+    else if (ac_res.outcome() == v_away) { A_loss++; C_wins++; }
+    else                                 { A_ties++; C_ties++; }
 
-    if (ad_res.outcome() == v_home) { A_wins++; D_loss++; }
-    else if (ad_res.outcome() == v_away) {A_wins++; D_loss++; }
-    else { A_ties++; D_ties++; }
+    if (ad_res.outcome() == v_home)      { A_wins++; D_loss++; }
+    else if (ad_res.outcome() == v_away) { A_loss++; D_wins++; }
+    else                                 { A_ties++; D_ties++; }
 
-    if (bc_res.outcome() == v_home) { B_wins++; C_loss++; }
-    else if (bc_res.outcome() == v_away) {B_wins++; C_loss++; }
-    else { B_ties++; C_ties++; }
+    if (bc_res.outcome() == v_home)      { B_wins++; C_loss++; }
+    else if (bc_res.outcome() == v_away) { B_loss++; C_wins++; }
+    else                                 { B_ties++; C_ties++; }
 
-    if (bd_res.outcome() == v_home) { B_wins++; D_loss++; }
-    else if (bd_res.outcome() == v_away) {B_wins++; D_loss++; }
-    else { B_ties++; D_ties++; }
+    if (bd_res.outcome() == v_home)      { B_wins++; D_loss++; }
+    else if (bd_res.outcome() == v_away) { B_loss++; D_wins++; }
+    else                                 { B_ties++; D_ties++; }
 
-    if (cd_res.outcome() == v_home) { C_wins++; D_loss++; }
-    else if (cd_res.outcome() == v_away) {C_wins++; D_loss++; }
-    else { C_ties++; D_ties++; }
+    if (cd_res.outcome() == v_home)      { C_wins++; D_loss++; }
+    else if (cd_res.outcome() == v_away) { C_loss++; D_wins++; }
+    else                                 { C_ties++; D_ties++; }
 
     PoolResults res = {.ab = ab_res, .ac = ac_res, .ad = ad_res,
                        .bc = bc_res, .bd = bd_res, 
@@ -92,22 +94,41 @@ auto Pool::gen_pools(const std::vector<Team> &t48, const std::vector<int> &permu
 auto conv_PoolResults_to_ranking(const PoolResults& res) -> std::vector<Team> {
 // auto conv_PoolResults_to_ranking(const PoolResults& res) {
 
-    // we need to give each team a score (let's do it using chess)
-    // a win is 3 points and a tie is 1 point
-
     // Compute the scores and store it in a four element vector
+    std::vector<Team> out = {res.a(), res.b(), res.c(), res.d()};
+
+    std::cout << "Teams before: \n";
+    for (auto &t : out) {
+        std::cout << t << "\n";
+    }
+
     std::vector<int> scores(4, 0);
     scores[0] = res.a_score();
     scores[1] = res.b_score();
     scores[2] = res.c_score();
     scores[3] = res.d_score();
 
+    std::vector<int> indices(4);
+    std::iota(indices.begin(), indices.end(), 0);
+    // Now order out based on their scores
+    std::stable_sort(indices.begin(), indices.end(),
+        [&] (int i1, int i2) { return scores[i1] > scores[i2]; });
+
     for (auto i : scores) {
         std::cout << i << " ";
     }
+
+    std::cout << "Teams after: \n";
+    for (auto &i : indices) {
+        std::cout << out[i] << "\n";
+    }
+
     std::cout << "\n";
 
-    std::vector<Team> out;
+
+    // now we need to sort the results
+
+
     return out;
 
 }

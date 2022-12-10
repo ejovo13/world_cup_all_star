@@ -45,6 +45,8 @@ struct Record {
         , goals_against{__goals_against}
     {}
 
+    auto operator==(const Record& rhs) const -> bool = default;
+
     double win_rate() const { return (double) wins / games; }
     double lose_rate() const { return (double) losses / games; }
     double avg_goals() const { return (double) goals / games; }
@@ -70,6 +72,8 @@ public:
         , away_{away}
         , total_{total}
     {}
+
+    bool operator==(const Team& rhs) const = default;
 
     // Read in a csv file in an established format
     Team(const std::string &csv_line);

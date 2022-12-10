@@ -16,7 +16,7 @@ macro(copy_file F)
          DESTINATION ${CMAKE_CURRENT_BINARY_DIR})
 endmacro()
 
-
+set(CMAKE_CXX_STANDARD 20)
 include_directories(${wc_inc})
 add_subdirectory(${wc_lib})
 add_subdirectory(${wc_src})

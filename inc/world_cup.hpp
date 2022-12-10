@@ -9,6 +9,7 @@
  *========================================================================**/
 
 #include "rng.hpp"
+#include "func.hpp"
 #include "team.hpp"
 #include "match.hpp"
 #include "bracket.hpp"
