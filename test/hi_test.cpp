@@ -4,7 +4,6 @@
 
 using namespace world_cup;
 
-void test_load();
 void test_germany_brazil();
 void test_bracket();
 void test_goal_rate();
@@ -12,37 +11,12 @@ void test_home_away();
 
 int main() {
 
-    test_load();
     test_germany_brazil();
     test_bracket();
     test_goal_rate();
     test_home_away();
 
     return 0;
-}
-
-void test_top_32() {
-
-}
-
-void test_load() {
-
-    // Load in all of the teams and verify certain information about them
-    std::string filename = "world_cup_stats.csv";
-    auto all_teams = Team::load_teams(filename);
-
-    // auto all_teams = Team::get_teams();
-    std::cout << all_teams.size() << "\n";
-    assert(all_teams.size() == 83);
-
-    // Pick out Italy
-    auto italy = all_teams[15];
-
-    assert(italy.total_games() == 83);
-    assert(italy.win_rate() == 45.0 / 83);
-    assert(italy.goals_per_game() == 128.0 / 83);
-    std::cout << "[test_load] passed\n";
-
 }
 
 // Germany won 7-1 against Brazil

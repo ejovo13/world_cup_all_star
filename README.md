@@ -2,7 +2,7 @@
 
 ### Building
 
-This project is build using CMake.
+This project is built using CMake.
 
 ```
 git clone git@github.com:ejovo13/world_cup_all_star.git
@@ -19,3 +19,13 @@ As of this commit, the executable `load_teams` will be created in `${CMAKE_BINAR
 cd src        # assuming we are in world_cup_all_star/build
 ./load_teams
 ```
+
+### Test Suite
+
+We use GoogleTest which seamlessly integrates with CMake. Tests can be called with `ctest` from the build directory:
+
+```
+ctest
+```
+
+![expected test output](media/tests.png)

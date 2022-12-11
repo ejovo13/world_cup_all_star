@@ -50,4 +50,34 @@ auto take(std::vector<X> vec, int n) {
     return out;
 }
 
+// Similar functionality to R's `order` function that sorts a vector of indices 
+// based on a passed in vector. Returns a vector of indices corresponding to the 
+// position of the ith element in a sorted vector
+// 
+// This version of order assumes that X is semi ordered (< and > exist) 
+//
+// example:
+//
+// order([14, 4, 7, 8]) -> [3, 0, 1, 2]
+// order([14, 4, 7, 8], true) -> [0, 3, 2, 1]
+template <class X>
+auto order(const std::vector<X> &vec, bool descending = false) -> std::vector<int> {
+
+    std::vector<int> indices (vec.size());
+    std::iota(indices.begin(), indices.end(), 0);
+
+    std::function<bool(int, int)> pred;
+
+    if (descending) { 
+        pred = [&] (int i_plus_1, int i) { return vec[i_plus_1] > vec[i]; }; // we want this expression to be false
+    } else {
+        pred = [&] (int i_plus_1, int i) { return vec[i_plus_1] < vec[i]; };
+    }
+
+    std::stable_sort(indices.begin(), indices.end(), pred);
+
+    return indices;
+}
+
+
 } // namespace world_cup::func
