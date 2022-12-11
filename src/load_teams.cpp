@@ -65,7 +65,7 @@ int main() {
     }
 
     for (auto &res : pool_results) {
-        conv_PoolResults_to_ranking(res);
+        res.to_ranking();
     }
 
     // for (auto &t : teams48) {

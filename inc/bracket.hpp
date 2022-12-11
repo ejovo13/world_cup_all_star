@@ -20,7 +20,6 @@
 namespace world_cup {
 
 
-
 struct PoolResults {
 
     MatchResult ab;
@@ -68,6 +67,10 @@ struct PoolResults {
     auto c() const -> Team { return cd.home; }
     auto d() const -> Team { return cd.away; }
 
+    // Convert a PoolResults into an ordered list of 4 teams.
+    // 
+    auto to_ranking() const -> std::vector<Team>;
+
 };
 
 // A vector (array?) of pool results whose length is 12 (because there are 12 teams of 4)
@@ -95,10 +98,10 @@ public:
 
     auto nb_teams() -> int { return teams_.size(); }
 
+    // Play a round with _Nm teams, returning a new round with _Nm / 2 winners
     auto play_round() -> BracketRound<_Nm / 2> {
         // Start by creating _Nm / 2 matches
         std::vector<Match> matches;
-
         for (int i = 0; i < _Nm; i += 2) {
             matches.push_back(Match(teams_[i], teams_[i + 1]));
         }
@@ -107,6 +110,7 @@ public:
             MatchResult res = m.simulate_no_ties();
             std::cout << "Winner: " << res.winner() << "\n";
             return res.winner();
+            // TODO verify that simulate_no_ties() yields no ties...
         };
 
         // Play all matches and extract the winners
@@ -115,9 +119,7 @@ public:
         // We should verify that the length of the winner is _Nm / 2
         if (winners.size() != _Nm / 2) throw std::invalid_argument("Length of the next round is not half of this round");
 
-        //TODO verify that the no ties yields no ties...
         // Now that we have the new winners, let's go ahead and construct the next bracket!
-
         BracketRound<_Nm / 2> next_round (winners);
 
         return next_round;
@@ -129,8 +131,7 @@ private:
 
 };
 
-// We need to convert a PoolResults object into a ranking.
-auto conv_PoolResults_to_ranking(const PoolResults& res) -> std::vector<Team>;
+
 
 std::ostream& operator<<(std::ostream &os, const PoolResults& res);
 

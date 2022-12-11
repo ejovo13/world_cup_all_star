@@ -170,9 +170,7 @@ std::vector<Team> Team::load_teams(const std::string &csv_file) {
     std::vector<Team> out(0);
 
     if (!file_exists(csv_file)) {
-        // exit
-        std::cerr << "ERROR: " << csv_file << " does not exist\n";
-        exit(2);
+        throw std::invalid_argument(csv_file + " does not exist");
     }
 
     std::getline(file, line); // skip the first line
