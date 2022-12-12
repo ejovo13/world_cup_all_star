@@ -45,7 +45,18 @@ struct Record {
         , goals_against{__goals_against}
     {}
 
-    auto operator==(const Record& rhs) const -> bool = default;
+    // auto operator==(const Record& rhs) const -> bool = default;
+
+    auto operator==(const Record& rhs) const -> bool {
+
+        return rhs.games == games &&
+               rhs.wins == wins &&
+               rhs.losses == losses &&
+               rhs.ties == ties &&
+               rhs.goals == goals &&
+               rhs.goals_against == goals_against;
+
+    }
 
     double win_rate() const { return (double) wins / games; }
     double lose_rate() const { return (double) losses / games; }
@@ -73,7 +84,14 @@ public:
         , total_{total}
     {}
 
-    bool operator==(const Team& rhs) const = default;
+    // bool operator==(const Team& rhs) const = default;
+
+
+    bool operator==(const Team& rhs) const {
+
+        return rhs.name_ == name_ && rhs.home_ == home_ && rhs.total_ == total_ && rhs.away_ == total_;
+
+    }
 
     // Read in a csv file in an established format
     Team(const std::string &csv_line);
