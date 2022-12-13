@@ -33,12 +33,14 @@ void test_germany_brazil() {
     int nb_games = 50000;
     int count_seven_one = 0;
 
-    for (int i = 0; i < nb_games; i++) {
+    auto sim_game = [&] () { 
         auto res = match.simulate();
         if (res.home_score == 7 && res.away_score == 1) {
             count_seven_one ++;
         }
-    }
+    };
+
+    func::replicate(nb_games, sim_game);
 
     std::cout << "Germany vs Brazil\n";
     std::cout << "Simulated " << nb_games << " games, num ocurrences of 7-1: " << count_seven_one << "\n";
@@ -93,9 +95,9 @@ void test_goal_rate() {
     int n_games = 100000;
     int total_goals = 0;
 
-    for (int i = 0; i < n_games; i++) {
-        total_goals += sim_goals(usa.goals_per_minute());
-    }
+    auto sim_game = [&] () { total_goals += sim_goals(usa.goals_per_minute()); };
+
+    func::replicate(n_games, sim_game);
 
     std::cout << "Total goals: " << total_goals << "\n";
     std::cout << "avg goals (exp): " << (double) total_goals / n_games << "\n";
@@ -115,7 +117,7 @@ void test_home_away() {
     std::cout << france << "\n";
 
     Match uf(usa, france);
-    Match fu(usa, france);
+    Match fu(france, usa);
 
     // Let's simulate n games and see how the proportion changes (or doesnt)
 
@@ -123,20 +125,21 @@ void test_home_away() {
     int us_won_home = 0;
     int us_won_away = 0;
 
-    for (int i = 0; i < nb_games; i++) {
+    auto sim_game_no_ties = [&] () {
 
+        // Increment USA home win
         MatchResult uf_res = uf.simulate_no_ties();
-        if (uf_res.winner() == usa) {
-            us_won_home ++;
-        }
+        if (uf_res.winner() == usa) us_won_home ++;
 
+        // Increment USA away win 
         MatchResult fu_res = fu.simulate_no_ties();
-        if (fu_res.winner() == usa) {
-            us_won_away ++;
-        }
-    }
+        if (fu_res.winner() == usa) us_won_away ++;
+    };
+
+    func::replicate(nb_games, sim_game_no_ties);
 
     std::cout << "USA home wins: " << us_won_home << "\n";
     std::cout << "USA away wins: " << us_won_away << "\n";
 
 }
+

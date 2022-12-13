@@ -13,7 +13,7 @@
 
 namespace world_cup {
 
-enum MatchOutcome { v_home, v_away, tie};
+enum MatchOutcome { v_home, v_away, tie };
 
 struct MatchResult {
 

@@ -53,6 +53,7 @@ And some executive decisions that we have to make
 
 - [ ] Should the home/away distinction matter? In the Kaggle data set the home team performs FAR BETTER than the away team. Should we take this into account? Currently the `goals_per_minute()` function uses the _combined_ average of a teams home and away performance so as not to skew the results of a match. Is that what we want?
 - [ ] Are you happy with the bracket system? 12 pools of 4 -> keep top 2 (24 teams) -> 16 teams round 2 and 8 teams with a bye -> 16 teams for round 2
+- [ ] There isn't enough data to base a teams performance solely on their past performance against a _specific_ team. What we could do, however, is take into account the past head-to-head matchups. Let's consider the example of France vs USA. If France has historically won more games against the US then maybe we could give their `goals_per_minute()` rate a slight bonus.
 
 Once that's done the core of our project is literally complete and we can implement _whatever_ else we want.
 

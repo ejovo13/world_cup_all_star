@@ -79,5 +79,13 @@ auto order(const std::vector<X> &vec, bool descending = false) -> std::vector<in
     return indices;
 }
 
+// Similar to R's replicate function, this function calls the _Expr n times
+template <class _Expr>
+inline void replicate(int n, _Expr expr) {
+    for (int i = 0; i < n; i++) {
+        expr();
+    }
+}
+
 
 } // namespace world_cup::func
