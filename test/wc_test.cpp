@@ -3,6 +3,9 @@
 
 using namespace world_cup;
 
+/**========================================================================
+ *!                           LoadTeams
+ *========================================================================**/
 TEST(LoadTeams, NumTeamsLoaded) {
 
     constexpr int NUM_TOTAL_TEAMS = 83;
@@ -33,6 +36,9 @@ TEST(LoadTeams, Italy) {
 
 }
 
+/**========================================================================
+ *!                           Functional
+ *========================================================================**/
 // Test the functions in world_cup::func
 TEST(Functional, Map) {
 
@@ -72,6 +78,8 @@ TEST(Functional, Take) {
 
 }
 
+
+
 TEST(Functional, Order) {
 
     const std::vector<int> VEC = {1, 4, 3, 9, 6};
@@ -80,5 +88,23 @@ TEST(Functional, Order) {
 
     EXPECT_EQ(func::order(VEC), INCREASING_IND);
     EXPECT_EQ(func::order(VEC, true), DECREASING_IND);
+
+}
+
+/**========================================================================
+ *!                           SimulateGames
+ *========================================================================**/
+TEST(SimulateGames, NoTies) {
+
+    auto teams = Team::get_teams();
+    Match m {teams[4], teams[32]};
+
+    auto assert_no_tie = [&] () {
+        MatchResult res = m.simulate_no_ties();
+        EXPECT_NE(res.outcome(), tie); // Assert that the result is not a tie
+    };
+
+    const int nb_games = 10000;
+    func::replicate(nb_games, assert_no_tie);
 
 }
