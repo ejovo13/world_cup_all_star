@@ -9,7 +9,7 @@
 #include "bracket.hpp"
 // #include ""
 
-using namespace world_cup;
+using namespace all_star::world_cup;
 
 
 // Let's go ahead and take the top 32 teams

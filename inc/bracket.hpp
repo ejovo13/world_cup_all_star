@@ -17,7 +17,7 @@
 #include "team.hpp"
 #include "match.hpp"
 
-namespace world_cup {
+namespace all_star::world_cup {
 
 
 struct PoolResults {
@@ -160,4 +160,4 @@ private:
 
 };
 
-} // namespace world_cup
+} // namespace all_star::world_cup

@@ -2,7 +2,7 @@
 #include <iostream>
 #include <assert.h>
 
-using namespace world_cup;
+using namespace all_star::world_cup;
 
 void test_germany_brazil();
 void test_bracket();
@@ -52,8 +52,8 @@ void test_germany_brazil() {
 
 }
 
-using namespace world_cup::rng; // shuffle_vec
-using namespace world_cup::func; // take
+using namespace all_star::world_cup::rng; // shuffle_vec
+using namespace all_star::world_cup::func; // take
 
 void test_bracket() {
 

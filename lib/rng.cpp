@@ -1,6 +1,6 @@
 #include "rng.hpp"
 
-namespace world_cup::rng { // world_cup::rng
+namespace all_star::world_cup::rng { // world_cup::rng
 
     /**========================================================================
      *!                           RNG functions
@@ -88,4 +88,4 @@ namespace world_cup::rng { // world_cup::rng
 
     }
 
-} // namespace world_cup::rng
+} // namespace all_star::world_cup::rng

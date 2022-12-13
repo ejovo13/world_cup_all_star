@@ -2,7 +2,7 @@
 
 #include <random>
 
-namespace world_cup::rng { // world_cup::rng
+namespace all_star::world_cup::rng { 
 
     /**========================================================================
      *!                           RNG functions
@@ -41,4 +41,4 @@ namespace world_cup::rng { // world_cup::rng
     auto sim_goals(double goals_per_minute) -> int;
 
 
-} // namespace world_cup::rng
+} // namespace all_star::world_cup::rng

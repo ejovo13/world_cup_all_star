@@ -3,7 +3,7 @@
 #include <assert.h>
 #include <sys/stat.h>
 
-namespace world_cup {
+namespace all_star::world_cup {
 
 namespace {
 
@@ -192,4 +192,4 @@ std::vector<Team> Team::load_teams(const std::string &csv_file) {
 
 
 
-};
+}; // namespace all_star::world_cup

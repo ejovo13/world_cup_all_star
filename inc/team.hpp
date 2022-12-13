@@ -16,7 +16,7 @@
 #include <algorithm>
 #include <random>
 
-namespace world_cup {
+namespace all_star::world_cup {
 
 struct Record {
 
@@ -137,4 +137,4 @@ private:
 };
 
 
-} // namespace world_cup
+} // namespace all_star::world_cup

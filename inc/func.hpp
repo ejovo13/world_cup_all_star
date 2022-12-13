@@ -14,7 +14,7 @@
 #include <vector>
 #include "rng.hpp"
 
-namespace world_cup::func {
+namespace all_star::world_cup::func {
 
 /**========================================================================
  *!                  Functional approach to bracket handling
@@ -88,4 +88,4 @@ inline void replicate(int n, _Expr expr) {
 }
 
 
-} // namespace world_cup::func
+} // namespace all_star::world_cup::func

@@ -1,6 +1,6 @@
 #include "bracket.hpp"
 
-namespace world_cup {
+namespace all_star::world_cup {
 
 auto operator<<(std::ostream &os, const PoolResults& res) -> std::ostream& {
     os << "A: " << res.A_wins << "-" << res.A_loss << "-" << res.A_ties << "\n";
@@ -132,4 +132,4 @@ auto PoolResults::to_ranking() const -> std::vector<Team> {
 
 
 
-}; // namespace world_cup
+}; // namespace all_star::world_cup

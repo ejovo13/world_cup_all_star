@@ -11,7 +11,7 @@
 #include "rng.hpp"
 // #include "bracket.hpp"
 
-namespace world_cup {
+namespace all_star::world_cup {
 
 enum MatchOutcome { v_home, v_away, tie };
 
@@ -93,4 +93,4 @@ private:
 
 
 
-}; // namespace world_cup
+}; // namespace all_star::world_cup

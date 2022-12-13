@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 #include "world_cup.hpp"
 
-using namespace world_cup;
+using namespace all_star::world_cup;
 
 /**========================================================================
  *!                           LoadTeams
