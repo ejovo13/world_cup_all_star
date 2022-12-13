@@ -1,5 +1,5 @@
 #include <gtest/gtest.h>
-#include "world_cup.hpp"
+#include "world_cup/world_cup.hpp"
 
 using namespace all_star::world_cup;
 

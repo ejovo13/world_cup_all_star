@@ -1,4 +1,4 @@
-#include "bracket.hpp"
+#include "world_cup/bracket.hpp"
 
 namespace all_star::world_cup {
 

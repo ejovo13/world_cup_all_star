@@ -1,16 +1,10 @@
-#include "team.hpp"
-#include "world_cup.hpp"
 #include <algorithm>
 #include <assert.h>
 #include <random>
 
-#include "match.hpp"
-#include "rng.hpp"
-#include "bracket.hpp"
-// #include ""
+#include "world_cup/world_cup.hpp"
 
 using namespace all_star::world_cup;
-
 
 // Let's go ahead and take the top 32 teams
 

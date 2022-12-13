@@ -1,5 +1,5 @@
-#include "team.hpp"
-#include "rng.hpp"
+#include "world_cup/team.hpp"
+#include "world_cup/rng.hpp"
 #include <assert.h>
 #include <sys/stat.h>
 

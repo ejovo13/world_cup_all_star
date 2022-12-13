@@ -1,6 +1,7 @@
-#include "world_cup.hpp"
 #include <iostream>
 #include <assert.h>
+
+#include "world_cup/world_cup.hpp"
 
 using namespace all_star::world_cup;
 

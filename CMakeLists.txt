@@ -1,6 +1,6 @@
 cmake_policy(SET CMP0048 NEW)
 
-project(world_cup VERSION 0.0.1)
+project(all_star VERSION 0.0.1)
 
 #======== Dependencies ==========================
 #================================================
@@ -10,9 +10,13 @@ cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 enable_testing(ON)
 
-set(wc_src ${CMAKE_SOURCE_DIR}/src)
-set(wc_lib ${CMAKE_SOURCE_DIR}/lib)
-set(wc_inc ${CMAKE_SOURCE_DIR}/inc)
+set(ALL_STAR_INC ${CMAKE_SOURCE_DIR}/inc)
+set(ALL_STAR_LIB ${CMAKE_SOURCE_DIR}/lib)
+set(ALL_STAR_SRC ${CMAKE_SOURCE_DIR}/src)
+
+set(wc_inc ${ALL_STAR_SRC}/world_cup)
+set(wc_lib ${ALL_STAR_lib}/world_cup)
+# set(wc_src ${ALL_STAR_SRC}/world_cup)
 
 add_compile_options($<$<CONFIG:Debug>:-g>)
 
@@ -34,7 +38,7 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 FetchContent_MakeAvailable(googletest)
 
-include_directories(${wc_inc})
-add_subdirectory(${wc_lib})
-add_subdirectory(${wc_src})
+include_directories(${ALL_STAR_INC})
+add_subdirectory(${ALL_STAR_LIB})
+add_subdirectory(${ALL_STAR_SRC})
 add_subdirectory(test)

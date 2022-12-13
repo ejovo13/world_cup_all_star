@@ -7,8 +7,8 @@
  * @email   : ejovo13@yahoo.com
  * @date    : 2022-12-08
  *========================================================================**/
-#include "team.hpp"
-#include "rng.hpp"
+#include "world_cup/team.hpp"
+#include "world_cup/rng.hpp"
 // #include "bracket.hpp"
 
 namespace all_star::world_cup {

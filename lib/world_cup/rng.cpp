@@ -1,4 +1,4 @@
-#include "rng.hpp"
+#include "world_cup/rng.hpp"
 
 namespace all_star::world_cup::rng { // world_cup::rng
 
