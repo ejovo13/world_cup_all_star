@@ -23,7 +23,13 @@ function(add_google_test TEST_NAME)
 endfunction()
 
 copy_file(world_cup_stats.csv)
+copy_file(story_element.ttf)
 
 # ====== Add tests ==============================================
 add_wc_test(hi)
 add_google_test(wc)
+
+
+## Smfl test window
+add_executable(sfml_test sfml_hello_world.cpp)
+target_link_libraries(sfml_test sfml-graphics sfml-audio)

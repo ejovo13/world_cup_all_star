@@ -2,6 +2,10 @@ cmake_policy(SET CMP0048 NEW)
 
 project(world_cup VERSION 0.0.1)
 
+#======== Dependencies ==========================
+#================================================
+find_package(SFML 2.5 COMPONENTS graphics audio REQUIRED)
+
 cmake_minimum_required(VERSION 3.1 FATAL_ERROR)
 
 enable_testing(ON)
