@@ -1,0 +1,1 @@
+add_library(game_mgr OBJECT game_mgr.cpp)
