@@ -12,6 +12,9 @@
 #define RADIUS 30
 #define GRAVITY 1 //To make the balls fall
 
+
+namespace all_star::mini_games {
+
 int random_ball_spawn_x(); // Get a random x coordinate for the next ball spawn
 int random_ball_spawn_y(); // Get a random y coordinate for the next ball spawn
 
@@ -30,7 +33,7 @@ class Ball{
     void update_touch(); // Update ball position within user click/
     int getX(); //get X coordinate
     int getY(); //get Y coordinate
-    sf::CircleShape getBall(); //Get the sf::CircleShape Object of the Ball
+    sf::CircleShape& getBall(); //Get the sf::CircleShape Object of the Ball
     float getYSpeed(); //Get the y_Speed of the ball
 };
 
@@ -45,3 +48,5 @@ class Game{
     bool checklose(); //Check that there's no ball on the ground
     void displaythegame(sf::RenderWindow& window); // To display everything in real time
 };
+
+} // namespace all_star::mini_games

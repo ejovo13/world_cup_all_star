@@ -24,6 +24,7 @@ endfunction()
 
 copy_file(world_cup_stats.csv)
 copy_file(arial.ttf)
+copy_file(ball.png)
 
 # ====== Add tests ==============================================
 add_wc_test(hi)

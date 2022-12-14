@@ -1,4 +1,6 @@
-#include "../../inc/mini_games/offense.hpp"
+#include "mini_games/offense.hpp"
+
+namespace all_star::mini_games {
 
 int Ball::_radius = RADIUS;
 
@@ -23,7 +25,7 @@ Ball::Ball(){
 
 int Ball::getX(){return _x;}
 int Ball::getY(){return _y;}
-sf::CircleShape Ball::getBall(){return _ball;}
+sf::CircleShape& Ball::getBall(){return _ball;}
 float Ball::getYSpeed(){return _y_Speed;}
 
 void Ball::update(){
@@ -91,3 +93,5 @@ int random_ball_spawn_y(){
     int min = WINDOW_HEIGHT - 6*RADIUS;
     return min + (int)((float)rand()*(max-min+1)/(RAND_MAX -1));
 }
+
+} // namespace all_star::mini_games

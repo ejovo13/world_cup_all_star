@@ -1,9 +1,13 @@
 #include "all_star.hpp"
 
+using namespace all_star::mini_games;
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Offense minigame");
     Game minigame;
+    window.setFramerateLimit(60);
+
     while (window.isOpen())
     {
         if (minigame.checklose())
