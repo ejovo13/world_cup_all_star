@@ -77,7 +77,11 @@ auto GameManager::start() -> void {
     mouse_pos.setFillColor(sf::Color::White);
 
     // Now let's try creating a square rectangle
-    RectangleButton my_button(sf::Color::Red, sf::Color::White, 100, 20, 250, 350); 
+    RectangleButton button1(sf::Color::Red, sf::Color::White, 100, 20, 250, 350); 
+    RectangleButton button2(sf::Color::Red, sf::Color::White, 100, 20, 370, 350); 
+
+    button1.set_on_click([&] { std::cerr << "Button 1 pressed!!\n"; } );
+    button2.set_on_click([&] { std::cerr << "Button 2 pressed!!\n"; } );
 
     int frame_count_i = 0;
     std::cerr << "Starting game\n";
@@ -86,16 +90,39 @@ auto GameManager::start() -> void {
     {
         frame_count.setString(std::to_string(frame_count_i));
         mouse_pos.setString(mouse_pos_str());
-        my_button.update_color(get_mouse_x(), get_mouse_y());
+        button1.update_color(get_mouse_x(), get_mouse_y());
+        button2.update_color(get_mouse_x(), get_mouse_y());
 
 
         // Process events
         sf::Event event;
         while (window_.pollEvent(event))
         {
-            // Close window: exit
+            /**========================================================================
+             *!                           Closed window
+             *========================================================================**/
             if (event.type == sf::Event::Closed)
                 window_.close();
+
+            /**========================================================================
+             *!                           Mouse Clicked
+             *========================================================================**/
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    std::cout << "the left button was pressed" << std::endl;
+                    
+                    // Button 1:
+                    if (button1.mouse_in_bounded_box(get_mouse_x(), get_mouse_y())) {
+                        button1.on_click();
+                    }
+
+                    if (button2.mouse_in_bounded_box(get_mouse_x(), get_mouse_y())) {
+                        button2.on_click();
+                    }
+                }
+            }
         }
 
         window_.clear();
@@ -103,7 +130,8 @@ auto GameManager::start() -> void {
         window_.draw(all_star);
         window_.draw(frame_count);
         window_.draw(mouse_pos);
-        window_.draw(my_button.get_shape());
+        window_.draw(button1.get_shape());
+        window_.draw(button2.get_shape());
 
         window_.display();
 
