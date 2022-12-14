@@ -26,7 +26,7 @@ class Ball{
     float _x_Speed;// to move the ball on the X axis
     static int _radius; // Ball Radius
     public :
-    Ball(int x, int y); //Constructor with given coordinates
+    Ball(int x, int y, sf::Texture& texture); //Constructor with given coordinates
     Ball(); //Random constructor for next balls
     void update(); //Update ball position within time
     void update_touch(); // Update ball position within user click/
@@ -38,9 +38,10 @@ class Ball{
 
 class Game{
     private :
+    sf::Texture _texture; //for the ball graphics
     std::vector<Ball> _listball; //Store every balls that are in the game
     public:
-    Game(); // Create the Game with one ball
+    Game(sf::Texture& texture); // Create the Game with one ball
     void update_game(); //Update all balls positions
     void update_balls(sf::Event event); //Update balls speed if there's a mouse click
     bool checklose(); //Check that there's no ball on the ground

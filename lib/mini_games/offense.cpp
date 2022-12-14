@@ -4,14 +4,12 @@ namespace world_cup::mini_games {
 
 int Ball::_radius = RADIUS;
 
-Ball::Ball(int x, int y) : _x(x), _y(y), _y_Speed(0), _x_Speed(0)
+Ball::Ball(int x, int y, sf::Texture& texture) : _x(x), _y(y), _y_Speed(0), _x_Speed(0)
 {
     _ball.setRadius(_radius);
     _ball.setOrigin(_radius,_radius);
     _ball.setPosition(_x, _y);
-    _ball.setFillColor(sf::Color::Red);
-    sf::Texture texture;
-    texture.loadFromFile("ball.png");
+    _ball.setFillColor(sf::Color::White);
     _ball.setTexture(&texture);
 }
 
@@ -43,8 +41,8 @@ void Ball::update_touch(){
     _y_Speed=-6;
 }
 
-Game::Game(){
-    _listball.push_back(Ball(WINDOW_WIDTH/2, (int)WINDOW_HEIGHT/3));
+Game::Game(sf::Texture& texture) : _texture(texture){
+    _listball.push_back(Ball(WINDOW_WIDTH/2, (int)WINDOW_HEIGHT/3, _texture));
 }
 
 void Game::update_game(){
@@ -58,7 +56,7 @@ void Game::update_balls(sf::Event event){
     for (auto& i : _listball){
         if (i.getBall().getGlobalBounds().contains(event.mouseButton.x,event.mouseButton.y)&&(i.getYSpeed()>=0)){
             i.update_touch();
-             Ball b(random_ball_spawn_x(),random_ball_spawn_y());
+             Ball b(random_ball_spawn_x(),random_ball_spawn_y(), _texture);
             _listball.push_back(b); 
         }
     }

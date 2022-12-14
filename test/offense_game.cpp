@@ -4,22 +4,14 @@ using namespace world_cup::mini_games;
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Offense minigame");
-    window.setFramerateLimit(60);
-    window.clear();
-    sf::CircleShape _ball;
-    _ball.setRadius(50);
-    _ball.setPosition(200,400);
-    _ball.setFillColor(sf::Color::Red);
-    sf::Texture texture;
-    texture.loadFromFile("ball.png");
-    _ball.setTexture(&texture);
-    window.draw(_ball);
-    window.display();
-    Game minigame;
-    window.setFramerateLimit(60);
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Offense minigame"); //open game window
+    window.setFramerateLimit(60); //set limit to have same experience between different pcs
+    sf::Texture ball_texture;   //for ball graphics
+    ball_texture.loadFromFile("ball.png");
 
-    while (window.isOpen())
+    Game minigame(ball_texture);//game initialization
+
+    while (window.isOpen()) //game loop
     {
         if (minigame.checklose())
         {
