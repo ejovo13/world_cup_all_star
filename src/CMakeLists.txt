@@ -1,5 +1,5 @@
 copy_file(world_cup_stats.csv)
-copy_file(story_element.ttf)
+copy_file(arial.ttf)
 
 add_executable(load_teams load_teams.cpp)
 target_link_libraries(load_teams $<TARGET_OBJECTS:world_cup>)

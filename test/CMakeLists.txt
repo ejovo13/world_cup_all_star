@@ -23,7 +23,7 @@ function(add_google_test TEST_NAME)
 endfunction()
 
 copy_file(world_cup_stats.csv)
-copy_file(story_element.ttf)
+copy_file(arial.ttf)
 
 # ====== Add tests ==============================================
 add_wc_test(hi)

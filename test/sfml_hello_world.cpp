@@ -6,7 +6,7 @@ int main()
      *!                           Basic font
      *========================================================================**/
     sf::Font font;
-    if (!font.loadFromFile("story_element.ttf")) {
+    if (!font.loadFromFile("arial.ttf")) {
         throw std::invalid_argument("Bad font");
     }
 

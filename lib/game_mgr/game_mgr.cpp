@@ -27,50 +27,85 @@
 namespace all_star::game_mgr {
 
 
-auto GameManager::start() const -> void {
+auto GameManager::start() -> void {
 
     sf::Font font;
-    if (!font.loadFromFile("story_element.ttf")) {
+    if (!font.loadFromFile("arial.ttf")) {
         throw std::invalid_argument("Bad font");
     }
-
-    // Create the main window
-    sf::RenderWindow window(sf::VideoMode(800, 600), "SFML window");
-
 
     // Initial settings
     // window.setTitle("SFML window");
     // window.setSize(sf::Vector2u(800, 600));
-    window.setPosition(sf::Vector2i(50, 50));
-    window.setVerticalSyncEnabled(true);
-    window.setFramerateLimit(60);
+    window_.setPosition(sf::Vector2i(50, 50));
+    window_.setVerticalSyncEnabled(true);
+    window_.setFramerateLimit(60);
 
+    auto new_text = [&] (std::string str, int xpos, int ypos, sf::Font font, int char_size, sf::Color col) {
+        sf::Text obj;
+        obj.setString(str);
+        obj.setPosition(xpos, ypos);
+        obj.setFont(font);
+        obj.setCharacterSize(char_size);
+        obj.setFillColor(col);
+        return obj;
+    };
 
-    sf::Text text;
-    text.setPosition(320, 300);
-    text.setFont(font);
-    text.setString("All Star World Cup");
-    text.setCharacterSize(24);
-    text.setFillColor(sf::Color::Red);
+    // auto mouse_pos_str = [&] () -> std::string {
 
+    //     std::string x = std::to_string(get_mouse_x());
+    //     std::string y = std::to_string(get_mouse_y());
+    //     std::string lp = "(";
+    //     std::string rp = ")";
+    //     std::string com = ", ";
 
-    while (window.isOpen())
+    //     return lp + x + com + y + rp;
+    // };
+
+    sf::Text all_star = new_text("All Star World Cup", 320, 300, font, 24, sf::Color::Red);
+    sf::Text frame_count;
+    sf::Text mouse_pos;
+
+    // update_text_obj(frame_count, "0", 10, 20, font, 10, sf::Color::White);
+    // update_text_obj(mouse_pos, "(0, 0)", 750, 20, font, 10, sf::Color::White);
+    // update_text_obj(all_star, "All Star World Cup", 320, 300, font, 24, sf::Color::Red);
+
+    std::cerr << "All star str: " << all_star.getString().toAnsiString() << "\n";
+
+    // sf::Text all_star;
+
+    // all_star.setString("WTF");
+    // all_star.setPosition(320, 300);
+    // all_star.setFont(font);
+    // all_star.setCharacterSize(24);
+    // all_star.setFillColor(sf::Color::Red);
+
+    int frame_count_i = 0;
+    std::cerr << "Starting game\n";
+
+    while (window_.isOpen())
     {
+        frame_count.setString(std::to_string(frame_count_i));
+        // mouse_pos.setString(mouse_pos_str());
+
         // Process events
         sf::Event event;
-        while (window.pollEvent(event))
+        while (window_.pollEvent(event))
         {
             // Close window: exit
             if (event.type == sf::Event::Closed)
-                window.close();
+                window_.close();
         }
 
-        window.clear();
+        window_.clear();
 
-        window.draw(text);
+        window_.draw(all_star);
+        // window_.draw(frame_count);
+        // window_.draw(mouse_pos);
 
+        window_.display();
 
-        window.display();
+        frame_count_i ++;
     }
 
 }
