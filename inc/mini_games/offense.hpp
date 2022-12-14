@@ -30,8 +30,8 @@ class Ball{
     void update_touch(); // Update ball position within user click/
     int getX(); //get X coordinate
     int getY(); //get Y coordinate
-    sf::CircleShape getBall();
-    float getYSpeed();
+    sf::CircleShape getBall(); //Get the sf::CircleShape Object of the Ball
+    float getYSpeed(); //Get the y_Speed of the ball
 };
 
 class Game{
@@ -42,6 +42,6 @@ class Game{
     Game(); // Create the Game with one ball
     void update_game(); //Update all balls positions
     void update_balls(sf::Event event); //Update balls speed if there's a mouse click
-    bool checklose(); //Vérifie qu'aucune balle ne touche le sol
+    bool checklose(); //Check that there's no ball on the ground
     void displaythegame(sf::RenderWindow& window); // To display everything in real time
 };

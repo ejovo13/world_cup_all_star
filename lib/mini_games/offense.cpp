@@ -8,6 +8,9 @@ Ball::Ball(int x, int y, float gravity) : _x(x), _y(y), _y_Speed(gravity), _x_Sp
     _ball.setOrigin(_radius,_radius);
     _ball.setPosition(_x, _y);
     _ball.setFillColor(sf::Color::Red);
+    sf::Texture texture;
+    texture.loadFromFile("ball.png");
+    _ball.setTexture(&texture);
 }
 
 Ball::Ball(){
@@ -79,12 +82,12 @@ void Game::displaythegame(sf::RenderWindow& window){
 // Randoms functions for balls spawns
 
 int random_ball_spawn_x(){
-    int min = WINDOW_WIDTH + RADIUS;
-    int max = WINDOW_HEIGHT - RADIUS;
+    int min = 0;
+    int max = WINDOW_WIDTH + RADIUS;
     return min + (int)((float)rand()*(max-min+1)/(RAND_MAX -1));
 }
 int random_ball_spawn_y(){
     int max = RADIUS;
-    int min = WINDOW_HEIGHT - RADIUS;
+    int min = WINDOW_HEIGHT - 6*RADIUS;
     return min + (int)((float)rand()*(max-min+1)/(RAND_MAX -1));
 }
