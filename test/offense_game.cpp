@@ -1,6 +1,32 @@
 #include "all_star.hpp"
 
-int main(){
-    sf::RenderWindow window(sf::VideoMode(800, 600), "Offense minigame");
+int main()
+{
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Offense minigame");
     Game minigame;
+    while (window.isOpen())
+    {
+        if (minigame.checklose())
+        {
+            sf::Event event;
+            while (window.pollEvent(event))
+            {
+                if (event.type == sf::Event::Closed)
+                {
+                    window.close();
+                }
+                else if (event.type == sf::Event::MouseButtonPressed)
+                {
+                    minigame.update_balls(event);
+                }
+            }
+            minigame.update_game();
+            minigame.displaythegame(window);
+        }
+        else
+        {
+            window.close();
+        }
+    }
+    return 0;
 }
