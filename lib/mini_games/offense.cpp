@@ -1,5 +1,4 @@
-#pragma once
-#include "offense.hpp"
+#include "mini_games/offense.hpp"
 
 int Ball::_radius = RADIUS;
 

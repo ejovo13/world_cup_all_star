@@ -1,0 +1,1 @@
+add_library(mini_games OBJECT offense.cpp)
