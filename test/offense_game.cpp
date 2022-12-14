@@ -1,10 +1,21 @@
 #include "all_star.hpp"
 
-using namespace all_star::mini_games;
+using namespace world_cup::mini_games;
 
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Offense minigame");
+    window.setFramerateLimit(60);
+    window.clear();
+    sf::CircleShape _ball;
+    _ball.setRadius(50);
+    _ball.setPosition(200,400);
+    _ball.setFillColor(sf::Color::Red);
+    sf::Texture texture;
+    texture.loadFromFile("ball.png");
+    _ball.setTexture(&texture);
+    window.draw(_ball);
+    window.display();
     Game minigame;
     window.setFramerateLimit(60);
 
@@ -25,7 +36,7 @@ int main()
                 }
             }
             minigame.update_game();
-            minigame.displaythegame(window);
+            minigame.display(window);
         }
         else
         {

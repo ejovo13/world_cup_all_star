@@ -1,10 +1,10 @@
 #include "mini_games/offense.hpp"
 
-namespace all_star::mini_games {
+namespace world_cup::mini_games {
 
 int Ball::_radius = RADIUS;
 
-Ball::Ball(int x, int y, float gravity) : _x(x), _y(y), _y_Speed(gravity), _x_Speed(0)
+Ball::Ball(int x, int y) : _x(x), _y(y), _y_Speed(0), _x_Speed(0)
 {
     _ball.setRadius(_radius);
     _ball.setOrigin(_radius,_radius);
@@ -29,9 +29,10 @@ sf::CircleShape& Ball::getBall(){return _ball;}
 float Ball::getYSpeed(){return _y_Speed;}
 
 void Ball::update(){
+    _y_Speed+=GRAVITY;
     if (_y + _y_Speed < 0){
 
-        _y_Speed = - _y_Speed;
+        _y_Speed = - 2 * _y_Speed / 3;
     }
     _y += _y_Speed;
     _x+= _x_Speed;
@@ -39,12 +40,11 @@ void Ball::update(){
 }
 
 void Ball::update_touch(){
-    _y_Speed=-GRAVITY;
+    _y_Speed=-6;
 }
 
 Game::Game(){
-    _gravity = GRAVITY;
-    _listball.push_back(Ball(WINDOW_WIDTH/2, WINDOW_HEIGHT/2, _gravity));
+    _listball.push_back(Ball(WINDOW_WIDTH/2, (int)WINDOW_HEIGHT/3));
 }
 
 void Game::update_game(){
@@ -58,7 +58,7 @@ void Game::update_balls(sf::Event event){
     for (auto& i : _listball){
         if (i.getBall().getGlobalBounds().contains(event.mouseButton.x,event.mouseButton.y)&&(i.getYSpeed()>=0)){
             i.update_touch();
-             Ball b(random_ball_spawn_x(),random_ball_spawn_y(),_gravity);
+             Ball b(random_ball_spawn_x(),random_ball_spawn_y());
             _listball.push_back(b); 
         }
     }
@@ -73,7 +73,7 @@ bool Game::checklose(){
     return true;
 }
 
-void Game::displaythegame(sf::RenderWindow& window){
+void Game::display(sf::RenderWindow& window){
     window.clear();
     for (auto &i : _listball){
         window.draw(i.getBall());
@@ -93,5 +93,4 @@ int random_ball_spawn_y(){
     int min = WINDOW_HEIGHT - 6*RADIUS;
     return min + (int)((float)rand()*(max-min+1)/(RAND_MAX -1));
 }
-
-} // namespace all_star::mini_games
+}

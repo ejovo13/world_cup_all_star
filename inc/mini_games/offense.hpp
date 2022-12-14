@@ -9,11 +9,10 @@
 
 #define WINDOW_HEIGHT 800 
 #define WINDOW_WIDTH 800
-#define RADIUS 30
-#define GRAVITY 1 //To make the balls fall
+#define RADIUS 35
+#define GRAVITY 0.06 //To make the balls fall
 
-
-namespace all_star::mini_games {
+namespace world_cup::mini_games {
 
 int random_ball_spawn_x(); // Get a random x coordinate for the next ball spawn
 int random_ball_spawn_y(); // Get a random y coordinate for the next ball spawn
@@ -27,7 +26,7 @@ class Ball{
     float _x_Speed;// to move the ball on the X axis
     static int _radius; // Ball Radius
     public :
-    Ball(int x, int y, float gravity); //Constructor with given coordinates
+    Ball(int x, int y); //Constructor with given coordinates
     Ball(); //Random constructor for next balls
     void update(); //Update ball position within time
     void update_touch(); // Update ball position within user click/
@@ -40,13 +39,11 @@ class Ball{
 class Game{
     private :
     std::vector<Ball> _listball; //Store every balls that are in the game
-    float _gravity; //To update balls positions
     public:
     Game(); // Create the Game with one ball
     void update_game(); //Update all balls positions
     void update_balls(sf::Event event); //Update balls speed if there's a mouse click
     bool checklose(); //Check that there's no ball on the ground
-    void displaythegame(sf::RenderWindow& window); // To display everything in real time
+    void display(sf::RenderWindow& window); // To display everything in real time
 };
-
-} // namespace all_star::mini_games
+}
