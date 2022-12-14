@@ -41,44 +41,40 @@ auto GameManager::start() -> void {
     window_.setVerticalSyncEnabled(true);
     window_.setFramerateLimit(60);
 
-    auto new_text = [&] (std::string str, int xpos, int ypos, sf::Font font, int char_size, sf::Color col) {
-        sf::Text obj;
-        obj.setString(str);
-        obj.setPosition(xpos, ypos);
-        obj.setFont(font);
-        obj.setCharacterSize(char_size);
-        obj.setFillColor(col);
-        return obj;
+    // Return the position of the mouse as a string that we can display 
+    // with a sf::Text object
+    auto mouse_pos_str = [&] () -> std::string {
+
+        std::string x = std::to_string(get_mouse_x());
+        std::string y = std::to_string(get_mouse_y());
+        std::string lp = "(";
+        std::string rp = ")";
+        std::string com = ", ";
+
+        return lp + x + com + y + rp;
     };
 
-    // auto mouse_pos_str = [&] () -> std::string {
-
-    //     std::string x = std::to_string(get_mouse_x());
-    //     std::string y = std::to_string(get_mouse_y());
-    //     std::string lp = "(";
-    //     std::string rp = ")";
-    //     std::string com = ", ";
-
-    //     return lp + x + com + y + rp;
-    // };
-
-    sf::Text all_star = new_text("All Star World Cup", 320, 300, font, 24, sf::Color::Red);
+    sf::Text all_star;
     sf::Text frame_count;
     sf::Text mouse_pos;
 
-    // update_text_obj(frame_count, "0", 10, 20, font, 10, sf::Color::White);
-    // update_text_obj(mouse_pos, "(0, 0)", 750, 20, font, 10, sf::Color::White);
-    // update_text_obj(all_star, "All Star World Cup", 320, 300, font, 24, sf::Color::Red);
+    all_star.setString("All Star World Cup");
+    all_star.setPosition(320, 300);
+    all_star.setFont(font);
+    all_star.setCharacterSize(24);
+    all_star.setFillColor(sf::Color::Red);
 
-    std::cerr << "All star str: " << all_star.getString().toAnsiString() << "\n";
+    frame_count.setString("0");
+    frame_count.setPosition(10, 20);
+    frame_count.setFont(font);
+    frame_count.setCharacterSize(10);
+    frame_count.setFillColor(sf::Color::White);
 
-    // sf::Text all_star;
-
-    // all_star.setString("WTF");
-    // all_star.setPosition(320, 300);
-    // all_star.setFont(font);
-    // all_star.setCharacterSize(24);
-    // all_star.setFillColor(sf::Color::Red);
+    mouse_pos.setString("(0, 0)");
+    mouse_pos.setPosition(750, 20);
+    mouse_pos.setFont(font);
+    mouse_pos.setCharacterSize(10);
+    mouse_pos.setFillColor(sf::Color::White);
 
     int frame_count_i = 0;
     std::cerr << "Starting game\n";
@@ -86,7 +82,7 @@ auto GameManager::start() -> void {
     while (window_.isOpen())
     {
         frame_count.setString(std::to_string(frame_count_i));
-        // mouse_pos.setString(mouse_pos_str());
+        mouse_pos.setString(mouse_pos_str());
 
         // Process events
         sf::Event event;
@@ -100,8 +96,8 @@ auto GameManager::start() -> void {
         window_.clear();
 
         window_.draw(all_star);
-        // window_.draw(frame_count);
-        // window_.draw(mouse_pos);
+        window_.draw(frame_count);
+        window_.draw(mouse_pos);
 
         window_.display();
 
