@@ -76,6 +76,9 @@ auto GameManager::start() -> void {
     mouse_pos.setCharacterSize(10);
     mouse_pos.setFillColor(sf::Color::White);
 
+    // Now let's try creating a square rectangle
+    RectangleButton my_button(sf::Color::Red, sf::Color::White, 100, 20, 250, 350); 
+
     int frame_count_i = 0;
     std::cerr << "Starting game\n";
 
@@ -83,6 +86,8 @@ auto GameManager::start() -> void {
     {
         frame_count.setString(std::to_string(frame_count_i));
         mouse_pos.setString(mouse_pos_str());
+        my_button.update_color(get_mouse_x(), get_mouse_y());
+
 
         // Process events
         sf::Event event;
@@ -98,6 +103,7 @@ auto GameManager::start() -> void {
         window_.draw(all_star);
         window_.draw(frame_count);
         window_.draw(mouse_pos);
+        window_.draw(my_button.get_shape());
 
         window_.display();
 
@@ -106,20 +112,4 @@ auto GameManager::start() -> void {
 
 }
 
-
-// Abstract base class with two derivatives, circle button and square button
-class AbstractButton {
-
-public:
-
-protected:
-
-private:
-
-
-};
-
-
-
-};
-
+}
