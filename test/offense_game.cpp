@@ -1,5 +1,4 @@
-#pragma once
-#include "offense.hpp"
+#include "all_star.hpp"
 
 int main(){
     sf::RenderWindow window(sf::VideoMode(800, 600), "Offense minigame");

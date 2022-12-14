@@ -33,3 +33,7 @@ add_google_test(wc)
 ## Smfl test window
 add_executable(sfml_test sfml_hello_world.cpp)
 target_link_libraries(sfml_test sfml-graphics sfml-audio)
+
+## Camille Offense
+add_executable(offense_test offense_game.cpp)
+target_link_libraries(offense_test all_star)
