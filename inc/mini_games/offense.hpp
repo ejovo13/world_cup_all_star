@@ -12,12 +12,15 @@
 #define RADIUS 40
 #define GRAVITY 0.02 //To make the balls fall
 #define DEFAULT_BALL_SPEED 6
+#define BUTTON_CHARACTER_SIZE 30
 
 namespace world_cup::mini_games {
 
 int random_ball_spawn_x(); // Get a random x coordinate for the next ball spawn
 int random_ball_spawn_y(); // Get a random y coordinate for the next ball spawn
-sf::RectangleShape configure_button(sf::Color fill_color, sf::Color outline_color, float thickness, int x, int y, std::string test);//configure a new button
+sf::RectangleShape configure_button(sf::Color fill_color, sf::Color outline_color, float thickness, int x, int y);//configure a new button
+sf::Text configure_button_text(sf::RectangleShape& button, std::string mytext, sf::Color color, std::string font_file);
+
 class Ball{
     private :
     int _x; // X coordinate
@@ -42,6 +45,8 @@ class Game{
     sf::Texture _texture; //for the all balls graphics
     std::vector<Ball> _listball; //Store every balls that are in the game
     int _score;
+    sf::RectangleShape _restart_button;
+    sf::Text _restart_text;
     public:
     Game(sf::Texture& texture); // Create the Game with one ball
     void update_game(); //Update all balls positions
