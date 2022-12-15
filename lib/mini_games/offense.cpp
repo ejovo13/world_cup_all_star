@@ -76,11 +76,11 @@ bool Game::checklose(){
 }
 
 void Game::display(sf::RenderWindow& window, sf::Sprite& background){
-    window.clear();
+    window.clear(sf::Color::Blue);
+    window.draw(background);
     for (auto &i : _listball){
         window.draw(i.getBall());
     }
-    window.draw(background);
     window.display();
 }
 

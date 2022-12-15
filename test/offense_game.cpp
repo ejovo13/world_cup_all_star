@@ -1,5 +1,4 @@
 #include "all_star.hpp"
-
 using namespace world_cup::mini_games;
 
 int main()
@@ -11,7 +10,8 @@ int main()
     sf::Texture background_texture;
     background_texture.loadFromFile("background.jpg");
     sf::Sprite game_background(background_texture);
-    game_background.setOrigin(WINDOW_WIDTH/2,WINDOW_HEIGHT/2);
+    game_background.setOrigin(200,200);
+    game_background.setPosition(WINDOW_HEIGHT/2,WINDOW_WIDTH/2);
     Game minigame(ball_texture);//game initialization
 
     while (window.isOpen()) //game loop

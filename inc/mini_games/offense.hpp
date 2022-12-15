@@ -9,7 +9,7 @@
 
 #define WINDOW_HEIGHT 800 
 #define WINDOW_WIDTH 800
-#define RADIUS 35
+#define RADIUS 40
 #define GRAVITY 0.08 //To make the balls fall
 #define DEFAULT_BALL_SPEED 6
 
