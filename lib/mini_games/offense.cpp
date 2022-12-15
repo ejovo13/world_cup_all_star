@@ -45,7 +45,7 @@ void Ball::update_touch(sf::Event event){
     _x_Speed = DEFAULT_BALL_SPEED * (_x - event.mouseButton.x)/RADIUS;
 }
 
-Game::Game(sf::Texture& texture) : _texture(texture){
+Game::Game(sf::Texture& texture) : _texture(texture), _score(1){
     _listball.push_back(Ball(WINDOW_WIDTH/2, (int)WINDOW_HEIGHT/3, _texture));
 }
 
@@ -61,7 +61,8 @@ void Game::update_balls(sf::Event event){
         if (i.getBall().getGlobalBounds().contains(event.mouseButton.x,event.mouseButton.y)&&(i.getYSpeed()>=0)){
             i.update_touch(event);
              Ball b(random_ball_spawn_x(),random_ball_spawn_y(), _texture);
-            _listball.push_back(b); 
+            _listball.push_back(b);
+            _score++;
         }
     }
 }
@@ -84,6 +85,18 @@ void Game::display(sf::RenderWindow& window, sf::Sprite& background){
     window.display();
 }
 
+void Game::game_over(sf::RenderWindow& window){
+    sf::RectangleShape button1;
+    sf::RectangleShape button2;
+}
+
+bool Game::game_over_click(sf::RenderWindow& windows, sf::Event event){
+
+}
+
+sf::RectangleShape configure_button(sf::Color fill_color, sf::Color outline_color, float thickness, int x, int y, std::string text){
+
+}
 // Randoms functions for balls spawns
 
 int random_ball_spawn_x(){

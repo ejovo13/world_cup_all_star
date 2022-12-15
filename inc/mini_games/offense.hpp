@@ -17,7 +17,7 @@ namespace world_cup::mini_games {
 
 int random_ball_spawn_x(); // Get a random x coordinate for the next ball spawn
 int random_ball_spawn_y(); // Get a random y coordinate for the next ball spawn
-
+sf::RectangleShape configure_button(sf::Color fill_color, sf::Color outline_color, float thickness, int x, int y, std::string test);//configure a new button
 class Ball{
     private :
     int _x; // X coordinate
@@ -41,11 +41,14 @@ class Game{
     private :
     sf::Texture _texture; //for the all balls graphics
     std::vector<Ball> _listball; //Store every balls that are in the game
+    int _score;
     public:
     Game(sf::Texture& texture); // Create the Game with one ball
     void update_game(); //Update all balls positions
     void update_balls(sf::Event event); //Update balls speed if there's a mouse click
     bool checklose(); //Check that there's no ball on the ground
     void display(sf::RenderWindow& window, sf::Sprite&); // To display everything in real time
+    void game_over(sf::RenderWindow& window); //The game over screen with buttons
+    bool game_over_click(sf::RenderWindow& window, sf::Event event); //Same with users interaction
 };
 }
