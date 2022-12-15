@@ -1,17 +1,17 @@
 #include "all_star.hpp"
 using namespace world_cup::mini_games;
 
+sf::Texture create_background_texture(std::string file);
+sf::Texture create_ball_texture(std::string file);
+sf::Sprite load_background(sf::Texture& background);
+
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Offense minigame"); //open game window
     window.setFramerateLimit(60); //set limit to have same experience between different PCs
-    sf::Texture ball_texture;   //for ball graphics
-    ball_texture.loadFromFile("ball.png");
-    sf::Texture background_texture;
-    background_texture.loadFromFile("background.jpg");
-    sf::Sprite game_background(background_texture);
-    game_background.setOrigin(200,200);
-    game_background.setPosition(WINDOW_HEIGHT/2,WINDOW_WIDTH/2);
+    sf::Texture ball_texture = create_ball_texture("ball.png"); //for ball texture
+    sf::Texture background_texture = create_background_texture("background.jpg"); //for background texture
+    sf::Sprite game_background = load_background(background_texture); //load background texture in an object to display later
     Game minigame(ball_texture);//game initialization
 
     while (window.isOpen()) //game loop
@@ -19,7 +19,7 @@ int main()
         if (minigame.checklose())
         {
             sf::Event event;
-            while (window.pollEvent(event))
+            while (window.pollEvent(event)) //check if user does something
             {
                 if (event.type == sf::Event::Closed)
                 {
@@ -39,4 +39,24 @@ int main()
         }
     }
     return 0;
+}
+
+sf::Texture create_background_texture(std::string file){
+    sf::Texture background_texture;
+    background_texture.create(WINDOW_WIDTH,WINDOW_HEIGHT);
+    background_texture.loadFromFile(file);
+    return background_texture;
+}
+
+sf::Texture create_ball_texture(std::string file){
+    sf::Texture ball_texture;   //for ball graphics
+    ball_texture.loadFromFile(file);
+    return ball_texture;
+}
+
+sf::Sprite load_background(sf::Texture& background){
+    sf::Sprite game_background(background);
+    game_background.setOrigin(WINDOW_WIDTH/2,WINDOW_HEIGHT/2);
+    game_background.setPosition(WINDOW_WIDTH/2, WINDOW_HEIGHT/2);
+    return game_background;
 }
