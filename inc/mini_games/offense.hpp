@@ -10,7 +10,7 @@
 #define WINDOW_HEIGHT 800 
 #define WINDOW_WIDTH 800
 #define RADIUS 40
-#define GRAVITY 0.08 //To make the balls fall
+#define GRAVITY 0.02 //To make the balls fall
 #define DEFAULT_BALL_SPEED 6
 
 namespace world_cup::mini_games {
@@ -27,7 +27,7 @@ class Ball{
     float _x_Speed;// to move the ball on the X axis
     static int _radius; // Ball Radius
     public :
-    Ball(int x, int y, sf::Texture& texture); //Constructor with given coordinates
+    Ball(int x, int y, sf::Texture& texture); //Constructor with given coordinates and the ball texture
     Ball(); //Random constructor for next balls
     void update(); //Update ball position within time
     void update_touch(sf::Event event); // Update ball position within user click/
