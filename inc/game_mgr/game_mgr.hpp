@@ -5,8 +5,9 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Mouse.hpp>
 
-namespace all_star::game_mgr {
+#include "world_cup/rng.hpp"
 
+namespace all_star::game_mgr {
 
 // Should this be an enum of menus or should these be different classes????
 enum class Menu { 
@@ -26,6 +27,7 @@ public:
         , color_b_{col}
         , on_click_{[&] { std::cerr << "Default button operation\n"; }}
     {}
+
     // Button that changes to color B when when the mouse is in the bounded box 
     AbstractButton(sf::Color col_a, sf::Color col_b) 
         : color_a_{col_a}
@@ -49,6 +51,8 @@ public:
     void on_click() const {
         on_click_();
     }
+
+    virtual const sf::Shape& get_shape() const = 0;
 
 protected:
 
@@ -76,10 +80,8 @@ public:
 
         float x = x_(), y = y_(), w = w_(), h = h_();
 
-        return mouse_x >= x && 
-               mouse_x <= x + w &&
-               mouse_y >= y &&
-               mouse_y <= y + h;
+        return mouse_x >= x && mouse_x <= x + w &&
+               mouse_y >= y && mouse_y <= y + h;
     }
  
     const sf::Shape& update_color(float mouse_x, float mouse_y) override {
@@ -92,7 +94,7 @@ public:
         }
     }
 
-    const sf::Shape& get_shape() const {
+    const sf::Shape& get_shape() const override {
         return rect_;
     }
 
@@ -123,7 +125,86 @@ private:
 };
 
 
+inline auto mouse_x(const sf::RenderWindow& window) -> int { return sf::Mouse::getPosition(window).x; }
+inline auto mouse_y(const sf::RenderWindow& window) -> int { return sf::Mouse::getPosition(window).y; }
 
+class Screen {
+
+public:
+
+    Screen(sf::Color bg_color, sf::RenderWindow& window) 
+        : bg_color_{bg_color}
+        , window_{window}
+    {}
+
+    Screen(const Screen &screen) = default;
+
+    Screen& operator=(const Screen &screen) {
+
+        this->buttons_ = screen.buttons_;
+        this->bg_color_ = screen.bg_color_;
+        return *this;
+
+    }
+
+    // Called once per frame
+    void display() {
+
+        window_.clear(bg_color_);
+
+        for (auto &b : buttons_) {
+            window_.draw(b.get_shape());
+        }
+
+        window_.display();
+
+    }
+
+    void update() {
+
+        for (auto &b : buttons_) {
+            b.update_color(mouse_x(window_), mouse_y(window_));
+        }
+
+    }
+
+    void add_button(RectangleButton &button) {
+        buttons_.push_back(button);
+    }
+
+    void poll_events() {
+
+        sf::Event event;
+        while (window_.pollEvent(event))
+        {
+            if (event.type == sf::Event::Closed)
+                window_.close();
+
+            if (event.type == sf::Event::MouseButtonPressed)
+            {
+                if (event.mouseButton.button == sf::Mouse::Left)
+                {
+                    for (auto &b : buttons_) {
+                        if (b.mouse_in_bounded_box(mouse_x(window_), mouse_y(window_))) {
+                            b.on_click();
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    std::vector<RectangleButton> buttons_;
+
+
+
+private:
+
+    sf::Color bg_color_;
+    sf::RenderWindow& window_;
+
+};
 
 
 
@@ -135,41 +216,60 @@ public:
     GameManager() 
       : menu_{Menu::kMain}
       , window_{sf::VideoMode(800, 600), "SFML window"}
+      , screen_{main_menu()}
     {}
 
     GameManager(int w, int h) 
       : menu_{Menu::kMain}
       , window_{sf::VideoMode(w, h), "SFML window"}
+      , screen_{main_menu()}
     {}
 
     auto start() -> void;
 
-    // get mouse x relavent to the currently rendered window
-    auto get_mouse_x() const -> int {
-        auto vec = sf::Mouse::getPosition(window_);
-        return vec.x;
-    }
+    /**========================================================================
+     *!                           Static Menus
+     *========================================================================**/
+    auto main_menu() -> Screen {
 
-    // get mouse y relavent to the currently rendered window
-    auto get_mouse_y() const -> int {
-        auto vec = sf::Mouse::getPosition(window_);
-        return vec.y;
-    }
+        // Create the main menu
+        RectangleButton start_button(sf::Color::Red, sf::Color::White, 200, 100, 250, 350);
+        start_button.set_on_click([&] { this->screen_ = second_menu(); });
 
-    auto draw_button(const AbstractButton& button) const -> void {
+           Screen main_menu(sf::Color::White, window_);
 
-        // If the mouse is in the button's bounded box, then draw color A
+        main_menu.buttons_.push_back(start_button);
 
-        // Else, draw color B    
-
+        return main_menu;
 
     }
+
+    auto second_menu() -> Screen {
+
+        // Create the main menu
+        RectangleButton magic_button(sf::Color::Magenta, sf::Color::Black, 30, 30, world_cup::rng::runif(50, 750), world_cup::rng::runif(50, 600));
+        magic_button.set_on_click([&] { this->screen_ = main_menu(); });
+
+        Screen main_menu(sf::Color::Black, window_);
+
+        main_menu.buttons_.push_back(magic_button);
+
+        return main_menu;
+
+    }
+
 
 private:
 
     Menu menu_;
     sf::RenderWindow window_;
+    Screen screen_; // The current screen to display
 
 };
+
+// Start implementing the different menu types
+
+
+
 
 } // namespace all_star::game_mgr

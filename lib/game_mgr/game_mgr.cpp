@@ -45,8 +45,8 @@ auto GameManager::start() -> void {
     // with a sf::Text object
     auto mouse_pos_str = [&] () -> std::string {
 
-        std::string x = std::to_string(get_mouse_x());
-        std::string y = std::to_string(get_mouse_y());
+        std::string x = std::to_string(mouse_x(window_));
+        std::string y = std::to_string(mouse_y(window_));
         std::string lp = "(";
         std::string rp = ")";
         std::string com = ", ";
@@ -64,25 +64,6 @@ auto GameManager::start() -> void {
     all_star.setCharacterSize(24);
     all_star.setFillColor(sf::Color::Red);
 
-    frame_count.setString("0");
-    frame_count.setPosition(10, 20);
-    frame_count.setFont(font);
-    frame_count.setCharacterSize(10);
-    frame_count.setFillColor(sf::Color::White);
-
-    mouse_pos.setString("(0, 0)");
-    mouse_pos.setPosition(750, 20);
-    mouse_pos.setFont(font);
-    mouse_pos.setCharacterSize(10);
-    mouse_pos.setFillColor(sf::Color::White);
-
-    // Now let's try creating a square rectangle
-    RectangleButton button1(sf::Color::Red, sf::Color::White, 100, 20, 250, 350); 
-    RectangleButton button2(sf::Color::Red, sf::Color::White, 100, 20, 370, 350); 
-
-    button1.set_on_click([&] { std::cerr << "Button 1 pressed!!\n"; } );
-    button2.set_on_click([&] { std::cerr << "Button 2 pressed!!\n"; } );
-
     int frame_count_i = 0;
     std::cerr << "Starting game\n";
 
@@ -90,54 +71,17 @@ auto GameManager::start() -> void {
     {
         frame_count.setString(std::to_string(frame_count_i));
         mouse_pos.setString(mouse_pos_str());
-        button1.update_color(get_mouse_x(), get_mouse_y());
-        button2.update_color(get_mouse_x(), get_mouse_y());
 
+        screen_.poll_events();
+        screen_.update();
+        screen_.display();
 
-        // Process events
-        sf::Event event;
-        while (window_.pollEvent(event))
-        {
-            /**========================================================================
-             *!                           Closed window
-             *========================================================================**/
-            if (event.type == sf::Event::Closed)
-                window_.close();
-
-            /**========================================================================
-             *!                           Mouse Clicked
-             *========================================================================**/
-            if (event.type == sf::Event::MouseButtonPressed)
-            {
-                if (event.mouseButton.button == sf::Mouse::Left)
-                {
-                    std::cout << "the left button was pressed" << std::endl;
-                    
-                    // Button 1:
-                    if (button1.mouse_in_bounded_box(get_mouse_x(), get_mouse_y())) {
-                        button1.on_click();
-                    }
-
-                    if (button2.mouse_in_bounded_box(get_mouse_x(), get_mouse_y())) {
-                        button2.on_click();
-                    }
-                }
-            }
-        }
-
-        window_.clear();
-
-        window_.draw(all_star);
         window_.draw(frame_count);
         window_.draw(mouse_pos);
-        window_.draw(button1.get_shape());
-        window_.draw(button2.get_shape());
-
-        window_.display();
 
         frame_count_i ++;
     }
 
 }
 
-}
+} // namespace all_start::game_mgr
