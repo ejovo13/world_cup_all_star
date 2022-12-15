@@ -31,14 +31,18 @@ void Ball::update(){
     if (_y + _y_Speed < 0){
 
         _y_Speed = - 2 * _y_Speed / 3;
+    }   
+    if ((_x + _x_Speed > WINDOW_WIDTH - RADIUS) || (_x + _x_Speed < RADIUS)){
+        _x_Speed = -2 * _x_Speed / 3;
     }
     _y += _y_Speed;
     _x+= _x_Speed;
     _ball.setPosition(_x, _y);
 }
 
-void Ball::update_touch(){
-    _y_Speed=-6;
+void Ball::update_touch(sf::Event event){
+    _y_Speed=-DEFAULT_BALL_SPEED;
+    _x_Speed = DEFAULT_BALL_SPEED * (_x - event.mouseButton.x)/RADIUS;
 }
 
 Game::Game(sf::Texture& texture) : _texture(texture){
@@ -55,7 +59,7 @@ void Game::update_game(){
 void Game::update_balls(sf::Event event){
     for (auto& i : _listball){
         if (i.getBall().getGlobalBounds().contains(event.mouseButton.x,event.mouseButton.y)&&(i.getYSpeed()>=0)){
-            i.update_touch();
+            i.update_touch(event);
              Ball b(random_ball_spawn_x(),random_ball_spawn_y(), _texture);
             _listball.push_back(b); 
         }
@@ -71,11 +75,12 @@ bool Game::checklose(){
     return true;
 }
 
-void Game::display(sf::RenderWindow& window){
+void Game::display(sf::RenderWindow& window, sf::Sprite& background){
     window.clear();
     for (auto &i : _listball){
         window.draw(i.getBall());
     }
+    window.draw(background);
     window.display();
 }
 
@@ -88,7 +93,7 @@ int random_ball_spawn_x(){
 }
 int random_ball_spawn_y(){
     int max = RADIUS;
-    int min = WINDOW_HEIGHT - 6*RADIUS;
+    int min = WINDOW_HEIGHT - 8*RADIUS;
     return min + (int)((float)rand()*(max-min+1)/(RAND_MAX -1));
 }
 }

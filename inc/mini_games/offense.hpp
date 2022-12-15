@@ -10,7 +10,8 @@
 #define WINDOW_HEIGHT 800 
 #define WINDOW_WIDTH 800
 #define RADIUS 35
-#define GRAVITY 0.06 //To make the balls fall
+#define GRAVITY 0.08 //To make the balls fall
+#define DEFAULT_BALL_SPEED 6
 
 namespace world_cup::mini_games {
 
@@ -29,7 +30,7 @@ class Ball{
     Ball(int x, int y, sf::Texture& texture); //Constructor with given coordinates
     Ball(); //Random constructor for next balls
     void update(); //Update ball position within time
-    void update_touch(); // Update ball position within user click/
+    void update_touch(sf::Event event); // Update ball position within user click/
     int getX(); //get X coordinate
     int getY(); //get Y coordinate
     sf::CircleShape& getBall(); //Get the sf::CircleShape Object of the Ball
@@ -38,13 +39,13 @@ class Ball{
 
 class Game{
     private :
-    sf::Texture _texture; //for the ball graphics
+    sf::Texture _texture; //for the all balls graphics
     std::vector<Ball> _listball; //Store every balls that are in the game
     public:
     Game(sf::Texture& texture); // Create the Game with one ball
     void update_game(); //Update all balls positions
     void update_balls(sf::Event event); //Update balls speed if there's a mouse click
     bool checklose(); //Check that there's no ball on the ground
-    void display(sf::RenderWindow& window); // To display everything in real time
+    void display(sf::RenderWindow& window, sf::Sprite&); // To display everything in real time
 };
 }
