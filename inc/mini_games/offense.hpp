@@ -10,7 +10,7 @@
 #define WINDOW_HEIGHT 800 
 #define WINDOW_WIDTH 800
 #define RADIUS 40
-#define GRAVITY 0.02 //To make the balls fall
+#define GRAVITY 0.06 //To make the balls fall
 #define DEFAULT_BALL_SPEED 6
 #define BUTTON_CHARACTER_SIZE 30
 
@@ -19,7 +19,8 @@ namespace world_cup::mini_games {
 int random_ball_spawn_x(); // Get a random x coordinate for the next ball spawn
 int random_ball_spawn_y(); // Get a random y coordinate for the next ball spawn
 sf::RectangleShape configure_button(sf::Color fill_color, sf::Color outline_color, float thickness, int x, int y);//configure a new button
-sf::Text configure_button_text(sf::RectangleShape& button, std::string mytext, sf::Color color, std::string font_file);
+sf::Text configure_button_text(sf::RectangleShape& button, std::string mytext, sf::Color color, sf::Font& font);
+sf::Text configure_text(std::string mytext, sf::Color color, sf::Font& font, int x, int y);
 
 class Ball{
     private :
@@ -45,10 +46,11 @@ class Game{
     sf::Texture _texture; //for the all balls graphics
     std::vector<Ball> _listball; //Store every balls that are in the game
     int _score;
+    sf::Font _font;
     sf::RectangleShape _restart_button;
     sf::Text _restart_text;
     public:
-    Game(sf::Texture& texture); // Create the Game with one ball
+    Game(sf::Texture& texture, sf::Font& font); // Create the Game with one ball
     void update_game(); //Update all balls positions
     void update_balls(sf::Event event); //Update balls speed if there's a mouse click
     bool checklose(); //Check that there's no ball on the ground

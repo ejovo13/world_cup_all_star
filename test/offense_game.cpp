@@ -12,7 +12,10 @@ int main()
     sf::Texture ball_texture = create_ball_texture("ball.png");                              // for ball texture
     sf::Texture background_texture = create_background_texture("background.jpg");            // for background texture
     sf::Sprite game_background = load_background(background_texture);                        // load background texture in an object to display later
-    Game minigame(ball_texture);                                                             // game initialization
+    std::string font_file = "arial.ttf";
+    sf::Font font;
+    font.loadFromFile(font_file);
+    Game minigame(ball_texture, font);                                                             // game initialization
     bool playing = true;
     while (window.isOpen()) // game loop
     {
@@ -38,7 +41,6 @@ int main()
             else
             {
                 playing = false;
-                new (&minigame) Game(ball_texture);
             }
         }
         else{
@@ -53,6 +55,7 @@ int main()
                     else if (event.type == sf::Event::MouseButtonPressed)
                     {
                         playing = minigame.game_over_click(window, event);
+                        if(playing){new (&minigame) Game(ball_texture, font);} //reset game
                     }
                 }
         }
