@@ -24,6 +24,7 @@ endfunction()
 
 copy_file(world_cup_stats.csv)
 copy_file(arial.ttf)
+copy_file(ball.png)
 
 # ====== Add tests ==============================================
 add_wc_test(hi)
@@ -33,3 +34,7 @@ add_google_test(wc)
 ## Smfl test window
 add_executable(sfml_test sfml_hello_world.cpp)
 target_link_libraries(sfml_test sfml-graphics sfml-audio)
+
+## Camille Offense
+add_executable(offense_test offense_game.cpp)
+target_link_libraries(offense_test all_star)
