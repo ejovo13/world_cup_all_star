@@ -18,7 +18,10 @@ set(wc_inc ${ALL_STAR_SRC}/world_cup)
 set(wc_lib ${ALL_STAR_lib}/world_cup)
 # set(wc_src ${ALL_STAR_SRC}/world_cup)
 
-add_compile_options($<$<CONFIG:Debug>:-g>)
+add_compile_options(
+    $<$<CONFIG:Debug>:-g>
+    $<$<CONFIG:Debug>:-Wall>
+)
 
 # Add a macro
 macro(copy_file F)

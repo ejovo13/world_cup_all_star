@@ -26,6 +26,12 @@
 
 namespace all_star::game_mgr {
 
+// sf::Font TextButton::s_font_{};
+// TextButton::s_font_.loadFromFile("arial.ttf");
+
+// bool TextButton::s_font_loaded_ = false;
+
+
 
 auto GameManager::start() -> void {
 
@@ -33,6 +39,8 @@ auto GameManager::start() -> void {
     if (!font.loadFromFile("arial.ttf")) {
         throw std::invalid_argument("Bad font");
     }
+
+
 
     // Initial settings
     // window.setTitle("SFML window");
@@ -54,32 +62,24 @@ auto GameManager::start() -> void {
         return lp + x + com + y + rp;
     };
 
-    sf::Text all_star;
+    // sf::Text all_star;
     sf::Text frame_count;
     sf::Text mouse_pos;
 
-    all_star.setString("All Star World Cup");
-    all_star.setPosition(320, 300);
-    all_star.setFont(font);
-    all_star.setCharacterSize(24);
-    all_star.setFillColor(sf::Color::Red);
+    // all_star.setString("All Star World Cup");
+    // all_star.setPosition(320, 300);
+    // all_star.setFont(font);
+    // all_star.setCharacterSize(24);
+    // all_star.setFillColor(sf::Color::Red);
 
     int frame_count_i = 0;
     std::cerr << "Starting game\n";
 
     while (window_.isOpen())
     {
-        frame_count.setString(std::to_string(frame_count_i));
-        mouse_pos.setString(mouse_pos_str());
-
         screen_.poll_events();
         screen_.update();
         screen_.display();
-
-        window_.draw(frame_count);
-        window_.draw(mouse_pos);
-
-        frame_count_i ++;
     }
 
 }
