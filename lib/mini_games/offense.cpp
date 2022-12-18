@@ -87,8 +87,9 @@ void Game::display(sf::RenderWindow& window, sf::Sprite& background){
     window.display();
 }
 
-void Game::game_over(sf::RenderWindow& window){
+void Game::game_over(sf::RenderWindow& window, sf::Sprite& background){
     window.clear();
+    window.draw(background);
     window.draw(_restart_button);
     window.draw(_restart_text);
     std::string score = std::to_string(_score);
@@ -97,8 +98,9 @@ void Game::game_over(sf::RenderWindow& window){
     window.display();
 }
 
-bool Game::game_over_click(sf::RenderWindow& window, sf::Event event){
+bool Game::game_over_click(sf::RenderWindow& window, sf::Event event, sf::Sprite& background){
     window.clear();
+    window.draw(background);
     window.draw(_restart_button);
     window.draw(_restart_text);
     std::string score = std::to_string(_score);

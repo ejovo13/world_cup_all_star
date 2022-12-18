@@ -8,10 +8,11 @@ sf::Sprite load_background(sf::Texture &background);
 int main()
 {
     sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "Offense minigame"); // open game window
-    window.setFramerateLimit(60);                                                            // set limit to have same experience between different PCs
+    window.setFramerateLimit(60);                                                        // set limit to have same experience between different PCs
     sf::Texture ball_texture = create_ball_texture("ball.png");                              // for ball texture
-    sf::Texture background_texture = create_background_texture("background.jpg");            // for background texture
+    sf::Texture background_texture = create_background_texture("background.png");            // for background texture
     sf::Sprite game_background = load_background(background_texture);                        // load background texture in an object to display later
+    //window.setView(sf::View(sf::FloatRect(0,0,background_texture.getSize().x,background_texture.getSize().y)));   
     std::string font_file = "arial.ttf";
     sf::Font font;
     font.loadFromFile(font_file);
@@ -44,7 +45,8 @@ int main()
             }
         }
         else{
-            minigame.game_over(window);
+            window.draw(game_background);
+            minigame.game_over(window, game_background);
             sf::Event event;
                 while (window.pollEvent(event)) // check if user does something
                 {
@@ -54,7 +56,7 @@ int main()
                     }
                     else if (event.type == sf::Event::MouseButtonPressed)
                     {
-                        playing = minigame.game_over_click(window, event);
+                        playing = minigame.game_over_click(window, event, game_background);
                         if(playing){new (&minigame) Game(ball_texture, font);} //reset game
                     }
                 }
@@ -81,7 +83,7 @@ sf::Texture create_ball_texture(std::string file)
 sf::Sprite load_background(sf::Texture &background)
 {
     sf::Sprite game_background(background);
-    game_background.setOrigin(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-    game_background.setPosition(WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
+    game_background.setScale(WINDOW_WIDTH / game_background.getLocalBounds().width, WINDOW_HEIGHT / game_background.getLocalBounds().height);
+    game_background.setPosition(0,0);
     return game_background;
 }
