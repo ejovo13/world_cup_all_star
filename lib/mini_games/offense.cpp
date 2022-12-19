@@ -54,8 +54,10 @@ namespace world_cup::mini_games
     Game::Game(sf::Texture &texture, sf::Font &font) : _texture(texture), _score(0), _font(font)
     {
         _listball.push_back(Ball(WINDOW_WIDTH / 2, (int)WINDOW_HEIGHT / 3, _texture));
-        _restart_button = configure_button(sf::Color::White, sf::Color::Red, 2, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2);
-        _restart_text = configure_button_text(_restart_button, "RESTART", sf::Color::Red, _font);
+        _restart_button = configure_button(sf::Color::White, sf::Color::Green, 2, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 - WINDOW_HEIGHT/ 7);
+        _restart_text = configure_button_text(_restart_button, "RESTART", sf::Color::Black, _font);
+        _close_button = configure_button(sf::Color::White, sf::Color::Red, 2, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2 + WINDOW_HEIGHT / 7);
+        _close_text = configure_button_text(_close_button, "CLOSE", sf::Color::Black, _font);
     }
 
     void Game::update_game()
@@ -113,8 +115,16 @@ namespace world_cup::mini_games
         else{
             _restart_button.setFillColor(sf::Color::White);
         }
+        if (_close_button.getGlobalBounds().contains(sf::Vector2f(mousePosition))){
+            _close_button.setFillColor(sf::Color::Red);
+        }
+        else{
+            _close_button.setFillColor(sf::Color::White);
+        }
         window.draw(_restart_button);
         window.draw(_restart_text);
+        window.draw(_close_button);
+        window.draw(_close_text);
         std::string score = std::to_string(_score);
         sf::Text score_text = configure_text("YOUR SCORE : " + score, sf::Color::Red, _font, (int)WINDOW_WIDTH / 2, (int)WINDOW_HEIGHT / 10);
         window.draw(score_text);
@@ -127,6 +137,8 @@ namespace world_cup::mini_games
         window.draw(background);
         window.draw(_restart_button);
         window.draw(_restart_text);
+        window.draw(_close_button);
+        window.draw(_close_text);
         std::string score = std::to_string(_score);
         sf::Text score_text = configure_text("YOUR SCORE : " + score, sf::Color::Red, _font, (int)WINDOW_WIDTH / 2, (int)WINDOW_HEIGHT / 10);
         window.draw(score_text);
@@ -134,6 +146,10 @@ namespace world_cup::mini_games
         if (_restart_button.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
         {
             return true;
+        }
+        if (_close_button.getGlobalBounds().contains(event.mouseButton.x, event.mouseButton.y))
+        {
+            window.close();
         }
         return false;
     }

@@ -49,6 +49,8 @@ class Game{
     sf::Font _font;
     sf::RectangleShape _restart_button;
     sf::Text _restart_text;
+    sf::RectangleShape _close_button;
+    sf::Text _close_text;
     public:
     Game(sf::Texture& texture, sf::Font& font); // Create the Game with one ball
     void update_game(); //Update all balls positions
