@@ -55,7 +55,7 @@ class Game{
     void update_balls(sf::Event event); //Update balls speed if there's a mouse click
     bool checklose(); //Check that there's no ball on the ground
     void display(sf::RenderWindow& window, sf::Sprite&); // To display everything in real time
-    void game_over(sf::RenderWindow& window, sf::Sprite& background); //The game over screen with buttons
+    void game_over(sf::RenderWindow& window, sf::Sprite& background, sf::Vector2i mousePosition); //The game over screen with buttons
     bool game_over_click(sf::RenderWindow& window, sf::Event event, sf::Sprite& background); //Same with users interaction
 };
 }

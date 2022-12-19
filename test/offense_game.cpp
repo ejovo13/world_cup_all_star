@@ -45,9 +45,10 @@ int main()
             }
         }
         else{
-            window.draw(game_background);
-            minigame.game_over(window, game_background);
             sf::Event event;
+            sf::Vector2i mousePosition = sf::Mouse::getPosition(window);
+            window.draw(game_background);
+            minigame.game_over(window, game_background, mousePosition);
                 while (window.pollEvent(event)) // check if user does something
                 {
                     if (event.type == sf::Event::Closed)
