@@ -31,11 +31,11 @@ namespace world_cup::mini_games
     void Ball::update()
     {
         _y_Speed += GRAVITY;
-        if (_y + _y_Speed < 0)
-        {
+        // if (_y + _y_Speed < 0)
+        // {
 
-            _y_Speed = -2 * _y_Speed / 3;
-        }
+        //     _y_Speed = -2 * _y_Speed / 3;
+        // }
         if ((_x + _x_Speed > WINDOW_WIDTH - RADIUS) || (_x + _x_Speed < RADIUS))
         {
             _x_Speed = -2 * _x_Speed / 3;
