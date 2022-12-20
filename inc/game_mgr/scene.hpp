@@ -28,6 +28,7 @@ enum ScreenSelection {
     kHelp = 1,
     kSecond = 2,
     kThird = 3,
+    kOffense = 4
 };
 
 class Screen {
@@ -42,6 +43,20 @@ public:
     {}
 
     Screen(const Screen &screen) = default;
+    Screen(Screen *screen) 
+        : font_{screen->font_}
+        , window_{screen->window_}
+    {
+
+        this->buttons_ = screen->buttons_;
+        this->bg_color_ = screen->bg_color_;
+        this->text_buttons_ = screen->text_buttons_;
+        this->loop_ = screen->loop_;
+        this->description_ = screen->description_;
+        this->font_ = screen->font_;
+        this->bg_ = screen->bg_;
+        this->draw_bg_ = screen->draw_bg_;
+    }
 
     // Used to switch contexts
     Screen& operator=(const Screen &screen);
@@ -49,9 +64,9 @@ public:
     void add_bg(const sf::Texture &t); 
 
     // These three functions are used in the main game loop
-    void display(); 
-    void poll_events(); 
-    void update(); 
+    virtual void display(); 
+    virtual void poll_events(); 
+    virtual void update(); 
 
     void add_button(RectangleButton &button); 
     void add_text_button(TextButton &button); 
@@ -69,10 +84,13 @@ public:
     std::vector<TextButton> text_buttons_;
     std::function<void(void)> loop_; // main looping function that can be set
 
-private:
+protected:
 
     sf::Font &font_;
     sf::RenderWindow& window_;
+
+private:
+
     bool draw_bg_ = false;
     sf::Sprite bg_;
     sf::Color bg_color_;

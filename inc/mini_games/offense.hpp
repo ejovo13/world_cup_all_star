@@ -14,7 +14,7 @@
 #define DEFAULT_BALL_SPEED 6
 #define BUTTON_CHARACTER_SIZE 30
 
-namespace world_cup::mini_games {
+namespace all_star::mini_games {
 
 int random_ball_spawn_x(); // Get a random x coordinate for the next ball spawn
 int random_ball_spawn_y(); // Get a random y coordinate for the next ball spawn
@@ -60,4 +60,10 @@ class Game{
     void game_over(sf::RenderWindow& window, sf::Sprite& background, sf::Vector2i mousePosition); //The game over screen with buttons
     bool game_over_click(sf::RenderWindow& window, sf::Event event, sf::Sprite& background); //Same with users interaction
 };
+
+sf::Texture create_background_texture(std::string file);
+sf::Texture create_ball_texture(std::string file);
+sf::Sprite load_background(sf::Texture &background);
+
+
 }

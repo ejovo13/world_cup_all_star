@@ -1,9 +1,5 @@
 #include "all_star.hpp"
-using namespace world_cup::mini_games;
-
-sf::Texture create_background_texture(std::string file);
-sf::Texture create_ball_texture(std::string file);
-sf::Sprite load_background(sf::Texture &background);
+using namespace all_star::mini_games;
 
 int main()
 {
@@ -64,27 +60,4 @@ int main()
         }
     }
     return 0;
-}
-
-sf::Texture create_background_texture(std::string file)
-{
-    sf::Texture background_texture;
-    background_texture.create(WINDOW_WIDTH, WINDOW_HEIGHT);
-    background_texture.loadFromFile(file);
-    return background_texture;
-}
-
-sf::Texture create_ball_texture(std::string file)
-{
-    sf::Texture ball_texture; // for ball graphics
-    ball_texture.loadFromFile(file);
-    return ball_texture;
-}
-
-sf::Sprite load_background(sf::Texture &background)
-{
-    sf::Sprite game_background(background);
-    game_background.setScale(WINDOW_WIDTH / game_background.getLocalBounds().width, WINDOW_HEIGHT / game_background.getLocalBounds().height);
-    game_background.setPosition(0,0);
-    return game_background;
 }

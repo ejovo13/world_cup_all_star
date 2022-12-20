@@ -34,13 +34,13 @@ auto GameManager::start() -> void {
     // Main game loop
     while (window_.isOpen())
     {
-        current_screen_.display();
-        current_screen_.poll_events();
+        current_screen_->display();
+        current_screen_->poll_events();
 
         if (should_switch_) {
             switch_screens(next_);
         } else {
-            current_screen_.update();
+            current_screen_->update();
         }
 
         frame_count_++;
@@ -50,13 +50,13 @@ auto GameManager::start() -> void {
 // Destroy all of the contents of the old screen, and make a new one
 void GameManager::switch_screens(ScreenSelection next) {
 
-    current_screen_.close();
+    current_screen_->close();
     should_switch_ = false;
     current_screen_ = get_screen(next);
 }
 
 // Get a constructred Scene object by passing in a ScreenSelection enumerator
-auto GameManager::get_screen(ScreenSelection next) -> Screen {
+auto GameManager::get_screen(ScreenSelection next) -> std::unique_ptr<Screen> {
 
     switch (next) {
         
@@ -64,6 +64,7 @@ auto GameManager::get_screen(ScreenSelection next) -> Screen {
     case kHelp: return help_menu(); break;
     case kSecond: return second_menu(); break;
     case kThird: return third_menu(); break;
+    case kOffense: return offense_game(); break;
     default: return main_menu(); break;
 
     } 
@@ -82,7 +83,7 @@ void GameManager::trigger_switch(ScreenSelection next) {
 /**========================================================================
  *!                          Menu Functions 
 *========================================================================**/
-auto GameManager::main_menu() -> Screen {
+auto GameManager::main_menu() -> std::unique_ptr<Screen> {
 
     sf::Color teal { 46, 167, 204}; // rgb(46, 167, 204)
     sf::Color brown{154, 115, 77 }; // rgb(154, 115, 77)
@@ -94,31 +95,34 @@ auto GameManager::main_menu() -> Screen {
 
     auto start_button = create_button(200, 100, 300, 400, "Start");
     auto help_button = create_button(200, 100, 300, 600, "My help button");
+    auto offense_button = create_button(200, 100, 300, 700, "Offense Minigame");
 
-    Screen main_menu(sf::Color::Red, window_, font_);
+    Screen *main_menu = new Screen(sf::Color::Red, window_, font_);
 
     start_button.set_on_click([&] { trigger_switch(kSecond); });
     help_button.set_on_click([&] { trigger_switch(kHelp); });
+    offense_button.set_on_click([&] { trigger_switch(kOffense); });
 
     std::cerr << "Main menu created\n"; 
 
 
-    main_menu.text_buttons_.push_back(start_button);
-    main_menu.text_buttons_.push_back(help_button);
+    main_menu->text_buttons_.push_back(start_button);
+    main_menu->text_buttons_.push_back(help_button);
+    main_menu->text_buttons_.push_back(offense_button);
 
     // main_menu.text_buttons_.push_back(text_button);
     // main_menu.text_buttons_.push_back(text_button2);
 
     // let's get a backgroudn
-    main_menu.add_bg(textures_[kSoccerField]);
+    main_menu->add_bg(textures_[kSoccerField]);
 
-    return main_menu;
+    return std::unique_ptr<Screen>(main_menu);
 
 }
 
-auto GameManager::help_menu() -> Screen {
+auto GameManager::help_menu() -> std::unique_ptr<Screen> {
 
-    Screen help {sf::Color::Green, window_, font_, "Help Menu"};
+    Screen* help = new Screen(sf::Color::Green, window_, font_, "Help Menu");
 
     // Let's add some text
     // ...
@@ -130,12 +134,12 @@ auto GameManager::help_menu() -> Screen {
 
     mm_button.set_on_click([&] { switch_screens(kMain); });
 
-    help.add_text_button(mm_button);
+    help->add_text_button(mm_button);
 
-    return help;
+    return std::unique_ptr<Screen>(help);
 }
 
-auto GameManager::second_menu() -> Screen {
+auto GameManager::second_menu() -> std::unique_ptr<Screen> {
 
     // Create the main menu
     RectangleButton magic_button(sf::Color::Magenta, sf::Color::Black, 30, 30, world_cup::rng::runif(50, 750), world_cup::rng::runif(50, 600));
@@ -144,23 +148,23 @@ auto GameManager::second_menu() -> Screen {
         std::cerr << "WHAT THE FUCKKKKKK\n";
     });
 
-    Screen main_menu(sf::Color::Black, window_, font_);
+    Screen *main_menu = new Screen(sf::Color::Black, window_, font_);
 
     // Let's try and create a screen with some text to display
-    main_menu.buttons_.push_back(magic_button);
+    main_menu->buttons_.push_back(magic_button);
 
-    return main_menu;
+    return std::unique_ptr<Screen>(main_menu);
 
 }
 
-auto GameManager::third_menu() -> Screen {
+auto GameManager::third_menu() -> std::unique_ptr<Screen> {
 
     // Let's add a third menu that only contains the all star text
-    Screen third(sf::Color::White, window_, font_);
+    Screen *third = new Screen(sf::Color::White, window_, font_);
 
     std::cerr << "Third menu initialized\n";
 
-    third.loop_ = [this, &third] {
+    third->loop_ = [this, &third] {
 
         sf::Text all_star;
         all_star.setString("All Star World Cup");
@@ -178,12 +182,84 @@ auto GameManager::third_menu() -> Screen {
                 this->window_.close();
         }
 
-        this->window_.clear(third.get_bg_color());
+        this->window_.clear(third->get_bg_color());
         this->window_.draw(all_star);
         this->window_.display();
     };
 
-    return third;
+    return std::unique_ptr<Screen>(third);
+}
+
+// using all_star::mini_games;
+
+class OffenseGame : public Screen {
+
+public: 
+
+    // I need to override the display function
+    OffenseGame(sf::Texture &ball_texture, sf::Font &font, sf::RenderWindow &window_, sf::Texture &bg) 
+        : Screen(sf::Color::Black, window_, font, "Offense Game")
+        , minigame_{ball_texture, font}
+        , bg_{mini_games::load_background(bg)}
+    {}
+
+    void display() override {
+
+        minigame_.display(window_, bg_);
+
+    }
+
+    void poll_events() override {
+
+        sf::Event event;
+        while (window_.pollEvent(event)) // check if user does something
+        {
+            if (event.type == sf::Event::Closed)
+            {
+                window_.close();
+            }
+            else if (event.type == sf::Event::MouseButtonPressed)
+            {
+                minigame_.update_balls(event);
+            }
+        }
+    }
+
+    void update() override {
+
+        if (!minigame_.checklose()) {
+            on_lose_();
+        } else {
+            minigame_.update_game();
+        }
+    }
+
+    void set_on_lose(std::function<void(void)> on_lose) {
+        on_lose_ = on_lose;
+    }
+
+
+private:
+
+    mini_games::Game minigame_;
+    std::function<void(void)> on_lose_; // action to perform on a loss
+    sf::Sprite bg_;
+
+
+};
+
+auto GameManager::offense_game() -> std::unique_ptr<Screen> {
+
+    // I want to create an offense Screen who's display function is customized
+    OffenseGame *og = new OffenseGame(textures_[kBall], font_, window_, textures_[kOffenseBG]);
+
+    og->set_on_lose(std::function<void(void)>(
+        [&] {
+            trigger_switch(kMain);
+        }
+    ));
+
+    return std::unique_ptr<Screen>(og);
 }
 
 
@@ -195,25 +271,16 @@ auto GameManager::load_textures() const -> std::unordered_map<TextureSelection, 
 
     std::unordered_map<TextureSelection, sf::Texture> map; 
 
-    sf::Texture main_menu_bg;
-    if (!main_menu_bg.loadFromFile("cartoon_soccer_field.png")) {
-        throw std::invalid_argument("Cartoon soccer field not found");
-    }
-
-    map[kSoccerField] = main_menu_bg;
+    map[kSoccerField] = load_texture("cartoon_soccer_field.png");
+    map[kOffenseBG]   = load_texture("offense_background.png");
+    map[kBall]        = load_texture("ball.png");
 
     std::cerr << "Succesfully loaded textures\n";
     return map;
 }
 
 auto GameManager::load_arial() const -> sf::Font {
-
-    sf::Font arial;
-    if(!arial.loadFromFile("arial.ttf")) {
-        throw std::invalid_argument("Arial not found");
-    };
-
-    return arial;
+    return load_font("arial.ttf");
 }
 
 
@@ -227,5 +294,51 @@ auto mouse_pos_str(sf::RenderWindow &window_) -> std::string {
 
     return lp + x + com + y + rp;
 };
+
+
+
+
+/**========================================================================
+ *!                           Functions for loading textures
+ *========================================================================**/
+auto load_texture(const std::string &filename) -> sf::Texture {
+
+    std::string path  = std::string("resources/") + filename;
+    std::string path2 = std::string("../resources/") + filename;
+
+    sf::Texture texture;
+
+    if (texture.loadFromFile(path)) {
+        // then we found the texture
+        return texture;
+    } else if (texture.loadFromFile(path2)) {
+        return texture;
+    } else {
+        std::string err_msg = std::string("Texture: '") + filename + std::string("' not found");
+        throw std::invalid_argument(err_msg);
+    }
+
+}
+
+auto load_font(const std::string &filename) -> sf::Font {
+
+    std::string path  = std::string("resources/") + filename;
+    std::string path2 = std::string("../resources/") + filename;
+
+    sf::Font font;
+
+    if (font.loadFromFile(path)) {
+        // then we found the font 
+        return font;
+    } else if (font.loadFromFile(path2)) {
+        return font;
+    } else {
+        std::string err_msg = std::string("Font '") + filename + std::string("' not found");
+        throw std::invalid_argument(err_msg);
+    }
+
+}
+
+
 
 } // namespace all_start::game_mgr
