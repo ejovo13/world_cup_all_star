@@ -1,175 +1,95 @@
+#pragma once
+
 #include <iostream>
 #include <string>
 #include <functional>
+#include <unordered_map>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Mouse.hpp>
 
+#include "world_cup/rng.hpp"
+#include "mini_games/offense.hpp"
+#include "game_mgr/buttons.hpp"
+#include "game_mgr/scene.hpp"
+#include "mini_games/offense.hpp"
+
+
 namespace all_star::game_mgr {
-
-
-// Should this be an enum of menus or should these be different classes????
-enum class Menu { 
-    kMain = 0,
-    kTeamSelection = 1,
-    kHelp = 2
-};
-
-// Abstract base class with two derivatives, circle button and square button
-class AbstractButton {
-
-public:
-
-    // Button that doesnt change color when we hover over it with a mouse
-    AbstractButton(sf::Color col) 
-        : color_a_{col}
-        , color_b_{col}
-        , on_click_{[&] { std::cerr << "Default button operation\n"; }}
-    {}
-    // Button that changes to color B when when the mouse is in the bounded box 
-    AbstractButton(sf::Color col_a, sf::Color col_b) 
-        : color_a_{col_a}
-        , color_b_{col_b} 
-        , on_click_{[&] { std::cerr << "Default button operation\n"; }}
-    {}
-
-    // Return the default color when not being interacted with
-    auto color_a() const -> sf::Color { return color_a_; }
-    // Return a second color when the mouse is hovered over the button
-    auto color_b() const -> sf::Color { return color_b_; } 
-    // return true when the mouse is in the button's bounded box
-    virtual auto mouse_in_bounded_box(float mouse_x, float mouse_y) const -> bool = 0;  
-    virtual auto update_color(float mouse_x, float mouse_y) -> const sf::Shape& = 0;
-
-    // Set the behavior of this function once it's clicked
-    void set_on_click(std::function<void(void)> on_click) {
-        on_click_ = on_click;
-    }
-
-    void on_click() const {
-        on_click_();
-    }
-
-protected:
-
-    sf::Color color_a_;
-    sf::Color color_b_;
-    std::function<void(void)> on_click_; // Something that happens when a function is clicked
-
-private:
-
-};
-
-class RectangleButton : public AbstractButton {
-
-public:
-
-    // x and y are the top left corner of the rectangle
-    RectangleButton(sf::Color col_a, sf::Color col_b, float width, float height, float x, float y)
-        : AbstractButton(col_a, col_b)
-        , rect_{sf::Vector2f(width, height)} 
-    {
-        rect_.setPosition(x, y);
-    }
-
-    bool mouse_in_bounded_box(float mouse_x, float mouse_y) const override {
-
-        float x = x_(), y = y_(), w = w_(), h = h_();
-
-        return mouse_x >= x && 
-               mouse_x <= x + w &&
-               mouse_y >= y &&
-               mouse_y <= y + h;
-    }
- 
-    const sf::Shape& update_color(float mouse_x, float mouse_y) override {
-        if (mouse_in_bounded_box(mouse_x, mouse_y)) {
-            rect_.setFillColor(color_b_);
-            return rect_;
-        } else {
-            rect_.setFillColor(color_a_);
-            return rect_;
-        }
-    }
-
-    const sf::Shape& get_shape() const {
-        return rect_;
-    }
-
-private:
-
-    sf::RectangleShape rect_;
-    
-    auto x_() const -> float { 
-        auto pos = rect_.getPosition();
-        return pos.x;
-    }
-    
-    auto y_() const -> float { 
-        auto pos = rect_.getPosition();
-        return pos.y;
-    }
-
-    auto w_() const -> float {
-        auto size = rect_.getSize();
-        return size.x;
-    }
-
-    auto h_() const -> float {
-        auto size = rect_.getSize();
-        return size.y;
-    }
-
-};
-
-
-
-
-
 
 // The main driver of our entire game, we will create a new window with GameManager.start()
 class GameManager {
 
 public:
 
-    GameManager() 
-      : menu_{Menu::kMain}
-      , window_{sf::VideoMode(800, 600), "SFML window"}
-    {}
+    enum TextureSelection {
+        kSoccerField = 0,
+        kOffenseBG = 1,
+        kBall = 2,
+    };
 
-    GameManager(int w, int h) 
-      : menu_{Menu::kMain}
-      , window_{sf::VideoMode(w, h), "SFML window"}
-    {}
+    GameManager(int w = 800, int h = 800) 
+      : window_{sf::VideoMode(w, h), "SFML window"}
+      , textures_{load_textures()}
+      , current_screen_{main_menu()}
+      , font_{load_arial()}
+    {
+
+        // Initial window settings
+        window_.setPosition(sf::Vector2i(50, 50));
+        window_.setVerticalSyncEnabled(true);
+        window_.setFramerateLimit(fps_);
+
+    }
 
     auto start() -> void;
 
-    // get mouse x relavent to the currently rendered window
-    auto get_mouse_x() const -> int {
-        auto vec = sf::Mouse::getPosition(window_);
-        return vec.x;
-    }
+    // Destroy all of the contents of the old screen, and make a new one
+    void switch_screens(ScreenSelection next);
+    
+    // Get a constructred Scene object by passing in a ScreenSelection enumerator
+    // Create a new std::unique_ptr<Screen>
+    auto get_screen(ScreenSelection next) -> std::unique_ptr<Screen>;
 
-    // get mouse y relavent to the currently rendered window
-    auto get_mouse_y() const -> int {
-        auto vec = sf::Mouse::getPosition(window_);
-        return vec.y;
-    }
-
-    auto draw_button(const AbstractButton& button) const -> void {
-
-        // If the mouse is in the button's bounded box, then draw color A
-
-        // Else, draw color B    
+    // Trigger a context switch to take place on the next frame
+    // If we have a button that tries to immediately switch, we end up 
+    // continuing to poll events for buttons that no longer exist
+    void trigger_switch(ScreenSelection next);
 
 
-    }
+    /**========================================================================
+     *!                          Menu Functions 
+     *========================================================================**/
+    auto main_menu() -> std::unique_ptr<Screen>; 
+    auto help_menu() -> std::unique_ptr<Screen>; 
+    auto second_menu() -> std::unique_ptr<Screen>; 
+    auto third_menu() -> std::unique_ptr<Screen>; 
+    auto offense_game() -> std::unique_ptr<Screen>;
 
 private:
 
-    Menu menu_;
+    /**========================================================================
+     *!                           Utility Functions
+     *========================================================================**/
+    // Preload textures and reference them by a TextureSelection enum    
+    auto load_textures() const -> std::unordered_map<TextureSelection, sf::Texture>; 
+
+    auto load_arial() const -> sf::Font; 
+
     sf::RenderWindow window_;
+    std::unordered_map<TextureSelection, sf::Texture> textures_;
+    std::unique_ptr<Screen> current_screen_; // The current screen to display
+    sf::Font font_;
+    bool should_switch_ = false;
+    ScreenSelection next_ = kMain;
+    int frame_count_ = 0;
+    int fps_ = 60;
 
 };
+
+auto load_texture(const std::string &filename) -> sf::Texture;
+auto load_font(const std::string &filename) -> sf::Font;
+
 
 } // namespace all_star::game_mgr
