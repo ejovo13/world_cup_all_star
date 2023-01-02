@@ -6,7 +6,7 @@ function(add_wc_test NM )
     set(SRC "${NM}_test.cpp")
     set(TNM "${NM}_test")
     add_executable(${TNM} ${SRC})
-    target_link_libraries(${TNM} world_cup)
+    target_link_libraries(${TNM} all_star sfml-graphics)
     add_test(NAME ${TNM}
              COMMAND ${TNM})
 endfunction()
@@ -28,6 +28,7 @@ copy_file(ball.png)
 
 # ====== Add tests ==============================================
 add_wc_test(hi)
+add_wc_test(defense)
 add_google_test(wc)
 
 
