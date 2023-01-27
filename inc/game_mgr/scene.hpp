@@ -4,6 +4,7 @@
 #include <string>
 #include <functional>
 #include <unordered_map>
+#include <memory>
 
 #include <SFML/Graphics.hpp>
 #include <SFML/Window/Mouse.hpp>
@@ -28,7 +29,8 @@ enum ScreenSelection {
     kHelp = 1,
     kSecond = 2,
     kThird = 3,
-    kOffense = 4
+    kOffense = 4,
+    kTeamSelect = 5
 };
 
 class Screen {
@@ -51,11 +53,13 @@ public:
         this->buttons_ = screen->buttons_;
         this->bg_color_ = screen->bg_color_;
         this->text_buttons_ = screen->text_buttons_;
+        this->text_boxes_ = screen->text_boxes_;
         this->loop_ = screen->loop_;
         this->description_ = screen->description_;
         this->font_ = screen->font_;
         this->bg_ = screen->bg_;
         this->draw_bg_ = screen->draw_bg_;
+        // this->drawable_items_ = screen->drawable_items_;
     }
 
     // Used to switch contexts
@@ -70,6 +74,8 @@ public:
 
     void add_button(RectangleButton &button); 
     void add_text_button(TextButton &button); 
+    void add_text_box(TextBox &box); 
+    void add_drawable(std::unique_ptr<sf::Drawable> drawable);
 
     // Close all of the elements in this screen
     virtual void close() {
@@ -82,6 +88,8 @@ public:
 
     std::vector<RectangleButton> buttons_;
     std::vector<TextButton> text_buttons_;
+    std::vector<TextBox> text_boxes_;
+    std::vector<std::unique_ptr<sf::Drawable>> drawable_items_;
     std::function<void(void)> loop_; // main looping function that can be set
 
 protected:

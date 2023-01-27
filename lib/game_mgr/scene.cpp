@@ -40,6 +40,14 @@ void Screen::display() {
         b.display(window_);
     }
 
+    for (auto &d : drawable_items_) {
+        window_.draw(*d);
+    }
+
+    for (auto &tb : text_boxes_) {
+        tb.display(window_);
+    }
+
     window_.display();
 }
 
@@ -56,6 +64,15 @@ void Screen::update() {
 
 void Screen::add_button(RectangleButton &button) {
     buttons_.push_back(button);
+}
+
+void Screen::add_text_box(TextBox &tb) {
+    text_boxes_.push_back(tb);
+}
+
+// Take a drawable object and push it to the list of drawable objects
+void Screen::add_drawable(std::unique_ptr<sf::Drawable> drawable) {
+    drawable_items_.push_back(std::move(drawable)); 
 }
 
 void Screen::add_text_button(TextButton &button) {

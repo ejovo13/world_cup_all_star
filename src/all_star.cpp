@@ -12,7 +12,6 @@ using namespace all_star::game_mgr;
 
 int main() {
 
-
     GameManager game;
     game.start();
 
