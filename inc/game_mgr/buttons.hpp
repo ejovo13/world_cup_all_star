@@ -124,6 +124,14 @@ public:
         // std::cerr << "RectangleButton::display() called\n";
     }
 
+    virtual auto set_x(float x) -> void {
+        rect_.setPosition(x, y_());
+    }
+
+    virtual auto set_y(float y) -> void {
+        rect_.setPosition(x_(), y);
+    }
+
 protected:
 
     sf::RectangleShape rect_;
@@ -147,6 +155,10 @@ protected:
         auto size = rect_.getSize();
         return size.y;
     }
+
+
+
+
 
 };
 
@@ -186,7 +198,7 @@ public:
         text_.setPosition(x + x_offset, y + y_offset);
         text_.setFillColor(col_b);
         text_.setFont(font);
-        std::cerr << "TextButton created with str: '" << str << "'\n";
+        // std::cerr << "TextButton created with str: '" << str << "'\n";
 
     }
 
@@ -229,6 +241,16 @@ public:
         x_offset_ = x;
     }
 
+    void set_x(float x) override {
+        rect_.setPosition(x, y_());
+        text_.setPosition(x + x_offset_, y_() + y_offset_);
+    }
+
+    void set_y(float y) override {
+        rect_.setPosition(x_(), y);
+        text_.setPosition(x_() + x_offset_, y + y_offset_);
+    }
+
 
 private:
 
@@ -238,5 +260,97 @@ private:
 
 
 };
+
+/**========================================================================
+ *!                           TextBoxes
+ *========================================================================**/
+
+// Combine a sf::Rectangle and sf::Text to display text over a rectangle
+class TextBox {
+
+public:
+
+    TextBox(sf::Color rect_col, sf::Color text_col, float width, float height, float x, float y, const sf::Font& font, std::string str = "Defualt", unsigned int char_size = 30) 
+      : rect_color_{rect_col}
+      , text_color_{text_col}
+      , x_{x}
+      , y_{y}
+      , w_{width}
+      , h_{height}
+      , x_offset_{5}
+      , y_offset_{5}
+      , y_spacing_{(float) char_size}
+      , rect_{sf::Vector2f(width, height)}
+      , char_size_{char_size}
+    {
+
+        rect_.setPosition(x, y);
+        rect_.setFillColor(rect_col);
+        
+        // create the first line of text
+        sf::Text t{str, font, char_size};
+        t.setPosition(sf::Vector2f(x + x_offset_, y + y_offset_));
+        t.setFillColor(text_col);
+
+        text_lines_.push_back(t);
+    }
+
+    void display(sf::RenderWindow &window) {
+
+        window.draw(rect_);
+        for (auto &t : text_lines_) {
+            window.draw(t);
+        }
+    }
+
+    int num_lines() const { return text_lines_.size(); }
+
+    const sf::Font *get_font() const { return text_lines_[0].getFont(); }
+    // const &sf::Font get_font() const { return text_lines_[0].}
+
+    void add_line(std::string str, int char_size = -1) {
+
+        unsigned int cs = 0; // local variable
+
+        // if the default char_size is passed in, use char_size_
+        if (char_size == -1) cs = char_size_;
+        else cs = char_size;
+
+        sf::Text t{str, *get_font(), cs};
+
+
+        // The y position will be the y position of the previous line + y_spacing_
+        int next_y = text_lines_.back().getPosition().y + y_spacing_;
+
+        t.setPosition(sf::Vector2f(x_ + x_offset_, next_y));
+        t.setFillColor(text_color_);
+
+        text_lines_.push_back(t);
+
+        // now update the y spacing to reflect the most recent line
+        y_spacing_ = cs;
+    }
+
+
+
+private:
+
+    std::vector<sf::Text> text_lines_;
+    sf::RectangleShape rect_;
+
+    sf::Color rect_color_;
+    sf::Color text_color_;
+    float x_; // top left x of the rectangle
+    float y_; // top left y of the rectangle
+    float w_;
+    float h_;
+    float x_offset_; // x text offset
+    float y_offset_; // y text offset
+    float y_spacing_; // y spacing of the text
+    unsigned int char_size_;
+
+};
+
+
 
 } // namespace all_star::game_mgr

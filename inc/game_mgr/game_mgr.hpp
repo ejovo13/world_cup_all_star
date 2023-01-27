@@ -32,6 +32,7 @@ public:
     GameManager(int w = 800, int h = 800) 
       : window_{sf::VideoMode(w, h), "SFML window"}
       , textures_{load_textures()}
+      , team_selected_{-1}
       , current_screen_{main_menu()}
       , font_{load_arial()}
     {
@@ -44,6 +45,9 @@ public:
     }
 
     auto start() -> void;
+
+    void select_team(int x) { team_selected_ = x; }
+    int get_selected_team() const { return team_selected_; }
 
     // Destroy all of the contents of the old screen, and make a new one
     void switch_screens(ScreenSelection next);
@@ -66,6 +70,14 @@ public:
     auto second_menu() -> std::unique_ptr<Screen>; 
     auto third_menu() -> std::unique_ptr<Screen>; 
     auto offense_game() -> std::unique_ptr<Screen>;
+    auto team_select() -> std::unique_ptr<Screen>;
+
+    /**========================================================================
+     *!                        Functions for unified GUI
+     *========================================================================**/
+    sf::Color teal()  const { return sf::Color(46, 167, 204); } // rgb(46, 167, 204)
+    sf::Color brown() const { return sf::Color(154, 115, 77); } // rgb(154, 115, 77)
+
 
 private:
 
@@ -79,12 +91,15 @@ private:
 
     sf::RenderWindow window_;
     std::unordered_map<TextureSelection, sf::Texture> textures_;
+    int team_selected_ = -1; // Number between 0 and 47 indicating the team that was selected in the team selection screen
     std::unique_ptr<Screen> current_screen_; // The current screen to display
     sf::Font font_;
     bool should_switch_ = false;
     ScreenSelection next_ = kMain;
     int frame_count_ = 0;
     int fps_ = 60;
+
+
 
 };
 
