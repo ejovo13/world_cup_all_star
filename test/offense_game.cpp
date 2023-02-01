@@ -12,7 +12,6 @@ int main()
     sf::Texture ball_texture = create_ball_texture("ball.png");                              // for ball texture
     sf::Texture background_texture = create_background_texture("background.png");            // for background texture
     sf::Sprite game_background = load_background(background_texture);                        // load background texture in an object to display later
-    //window.setView(sf::View(sf::FloatRect(0,0,background_texture.getSize().x,background_texture.getSize().y)));   
     std::string font_file = "arial.ttf";
     sf::Font font;
     font.loadFromFile(font_file);
